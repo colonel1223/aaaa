@@ -1,33 +1,37 @@
 # Spencer Kitaro Cottrell
 
-Artificial Intelligence Researcher  
-AGI Theory · Embodied Intelligence · AI Economics  
+AI Researcher — Artificial General Intelligence | Economic Transformation | Embodied Intelligence  
 San José State University
 
 ---
 
-## The Digital Philosopher’s Stone Project
+## Research Program
 
-A unified research program exploring artificial intelligence development, economic transformation, and AGI risk.
+### The Digital Philosopher's Stone Project (2026)
 
-### Research Papers
-- The Digital Philosopher’s Stone
-- Economic Transmutation
-- The Stone’s Shadow
+A theoretical research program exploring:
 
-(Publication coming soon)
-
----
-
-## Research Focus
-
-- Artificial General Intelligence
-- Machine Learning
-- Cognitive Systems
-- AI Economics
-- Robotics / Embodied Intelligence
+- Artificial intelligence development
+- AGI trajectory and risks
+- Economic transformation from AI
+- Human–AI cognitive evolution
 
 ---
 
-## GitHub
-https://github.com/colonel1223
+## Research Papers
+
+### The Digital Philosopher’s Stone
+[Read Paper](./The_Digital_Philosophers_Stone_Research_Paper.docx)
+
+### Economic Transmutation
+[Read Paper](./Economic_Transmutation_Addendum_1.docx)
+
+### The Stone’s Shadow: Existential Risk Analysis
+[Read Paper](./The_Stones_Shadow_Existential_Risk_Analysis.docx)
+
+---
+
+## Contact
+
+GitHub: https://github.com/colonel1223  
+arXiv: coming soon

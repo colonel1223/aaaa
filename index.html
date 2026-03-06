@@ -1126,6 +1126,158 @@ footer {
   0%, 100% { opacity: 0.15; }
   50% { opacity: 0.25; }
 }
+
+/* ═══════════════════════════════════════════
+   STATUS BAR
+   ═══════════════════════════════════════════ */
+.status-bar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: rgba(22,25,32,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+.status-left,
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-tertiary);
+}
+
+.status-item .label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.status-item .value {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-clock .value {
+  color: var(--accent-red);
+  min-width: 58px;
+}
+
+.status-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--border);
+}
+
+.version-badge {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--accent-red-dim);
+  color: var(--accent-red);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Offset hero and sections for double bar */
+#hero { padding-top: 88px; }
+
+/* ═══════════════════════════════════════════
+   LANGUAGE TOGGLE
+   ═══════════════════════════════════════════ */
+.lang-toggle {
+  position: relative;
+}
+
+.lang-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+  border-color: var(--accent-red-dim);
+  color: var(--text-primary);
+}
+
+.lang-btn svg {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.2s ease;
+}
+
+.lang-toggle.open .lang-btn svg {
+  transform: rotate(180deg);
+}
+
+.lang-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  min-width: 120px;
+  z-index: 1001;
+}
+
+.lang-toggle.open .lang-dropdown {
+  display: block;
+}
+
+.lang-option {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lang-option:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.lang-option.active {
+  color: var(--accent-red);
+}
+
+@media (max-width: 900px) {
+  .status-bar { padding: 0 1rem; gap: 0.5rem; }
+  .status-left { gap: 0.75rem; }
+  .status-item .label { display: none; }
+}
 </style>
 </head>
 <body>
@@ -1160,6 +1312,20 @@ footer {
   </div>
 
   <div class="nav-social">
+    <!-- Language Toggle -->
+    <div class="lang-toggle" id="langToggle">
+      <button class="lang-btn" onclick="document.getElementById('langToggle').classList.toggle('open')">
+        <span id="langCurrent">EN</span>
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4l3 3 3-3"/></svg>
+      </button>
+      <div class="lang-dropdown">
+        <button class="lang-option active" data-lang="en">English</button>
+        <button class="lang-option" data-lang="ja">日本語</button>
+        <button class="lang-option" data-lang="fr">Français</button>
+        <button class="lang-option" data-lang="de">Deutsch</button>
+        <button class="lang-option" data-lang="it">Italiano</button>
+      </div>
+    </div>
     <!-- Google Scholar -->
     <a href="#" title="Google Scholar" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
@@ -1178,6 +1344,26 @@ footer {
     </a>
   </div>
 </nav>
+
+<!-- ═══════════════════════════════════════════
+     STATUS BAR
+     ═══════════════════════════════════════════ -->
+<div class="status-bar">
+  <div class="status-left">
+    <div class="status-item status-clock">
+      <span class="label">UTC</span>
+      <span class="value" id="liveClock">00:00:00</span>
+    </div>
+    <span class="status-divider"></span>
+    <div class="status-item">
+      <span class="label">Updated</span>
+      <span class="value" id="lastUpdated">03/05/2026 · 23:30 PST</span>
+    </div>
+  </div>
+  <div class="status-right">
+    <span class="version-badge">v2.0</span>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════
      HERO
@@ -2246,6 +2432,371 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.3, rootMargin: '-56px 0px 0px 0px' });
 
   sections.forEach(section => observer.observe(section));
+
+  // ═══════════════════════════════════════════
+  // LIVE MILITARY CLOCK (visitor's local time)
+  // ═══════════════════════════════════════════
+  const clockEl = document.getElementById('liveClock');
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getUTCHours()).padStart(2, '0');
+    const m = String(now.getUTCMinutes()).padStart(2, '0');
+    const s = String(now.getUTCSeconds()).padStart(2, '0');
+    clockEl.textContent = h + ':' + m + ':' + s;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ═══════════════════════════════════════════
+  // LAST UPDATED (auto from last git push, PST)
+  // ═══════════════════════════════════════════
+  // This timestamp is injected at build time. Update this value each deploy.
+  const LAST_DEPLOY = new Date('2026-03-06T07:30:00Z'); // UTC equivalent of 03/05/2026 23:30 PST
+  const pst = new Date(LAST_DEPLOY.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+  const mm = String(pst.getMonth() + 1).padStart(2, '0');
+  const dd = String(pst.getDate()).padStart(2, '0');
+  const yyyy = pst.getFullYear();
+  const hh = String(pst.getHours()).padStart(2, '0');
+  const mi = String(pst.getMinutes()).padStart(2, '0');
+  document.getElementById('lastUpdated').textContent = mm + '/' + dd + '/' + yyyy + ' · ' + hh + ':' + mi + ' PST';
+
+  // ═══════════════════════════════════════════
+  // LANGUAGE TOGGLE + TRANSLATION ENGINE
+  // ═══════════════════════════════════════════
+  const translations = {
+    en: {
+      // Nav
+      'nav.about': 'About',
+      'nav.expertise': 'Expertise',
+      'nav.demos': 'Demos',
+      'nav.archive': 'Archive',
+      'nav.research': 'Research',
+      'nav.resume': 'Resume',
+      'nav.stack': 'Stack',
+      // Hero
+      'hero.tag': 'AI Safety Research',
+      'hero.description': 'Independent researcher working at the intersection of alignment theory, interpretability, and existential risk quantification. Building formal frameworks to ensure intelligence remains comprehensible, controllable, and safe.',
+      'hero.meta1': 'SJSU Economics',
+      'hero.meta2': 'Alignment',
+      'hero.meta3': 'Interpretability',
+      // About
+      'about.label': '01 · Identity',
+      'about.title': 'About',
+      'about.p1': 'I am a 20-year-old researcher based in San Jose, studying economics at SJSU while independently pursuing questions most people don\'t encounter until graduate school — or ever. My work sits at the convergence of machine learning theory, alignment formalism, and existential risk quantification.',
+      'about.p2': 'I don\'t come from a traditional ML pipeline. I didn\'t wait for permission from a credential. I built simulation environments to study mesa-objective emergence. I wrote conformal prediction frameworks from scratch. I quantified hallucination impossibility across 847,000 traces. The work speaks.',
+      'about.p3': 'My conviction is simple: this technology will either be the greatest force for human prosperity or the last invention we ever make. I am building the tools to ensure it is the former. Not for status. Not for titles. Because the stakes demand it.',
+      'about.human': 'Beyond the research — I am a father, a human being who grew up fascinated by systems and how they break. I taught myself neural network architectures at 18. I read Bostrom before I read my econ textbooks. I think about alignment when most people my age think about other things entirely. This isn\'t a career move. It\'s the thing I cannot stop doing.',
+      'about.skills': 'Core Technical Competencies',
+      // Expertise
+      'exp.label': '02 · Depth',
+      'exp.title': 'Technical Expertise',
+      'exp.subtitle': 'Core research domains and methodological rigor',
+      // Demos
+      'demos.label': '03 · Interactive',
+      'demos.title': 'Live Demos',
+      'demos.subtitle': 'Each demo is a different lens on the same problem: what happens when intelligence becomes substrate-independent.',
+      // Archive
+      'archive.label': '04 · Archive',
+      'archive.title': 'Transmutation Research Archive',
+      'archive.subtitle': 'Complete index of research threads — from alignment formalism to existential risk quantification.',
+      // Research
+      'research.label': '05 · Papers',
+      'research.title': 'Research',
+      'research.subtitle': 'Selected work in alignment, interpretability, and risk',
+      // Resume
+      'resume.label': '06 · CV',
+      'resume.title': 'Resume',
+      'resume.work': 'Research & Work',
+      'resume.edu': 'Education',
+      'resume.download': 'Download Full CV (PDF)',
+      // Stack
+      'stack.label': '07 · Tools',
+      'stack.title': 'Stack & Method',
+      // Footer
+      'footer.credit': 'S. K. Cottrell — AI Safety Research — 2025',
+      // Status
+      'status.updated': 'Updated',
+    },
+    ja: {
+      'nav.about': '概要',
+      'nav.expertise': '専門知識',
+      'nav.demos': 'デモ',
+      'nav.archive': 'アーカイブ',
+      'nav.research': '研究',
+      'nav.resume': '履歴書',
+      'nav.stack': '技術スタック',
+      'hero.tag': 'AI安全性研究',
+      'hero.description': 'アラインメント理論、解釈可能性、存在リスクの定量化の交差点で活動する独立研究者。知能が理解可能で制御可能かつ安全であり続けるための形式的フレームワークを構築しています。',
+      'hero.meta1': 'SJSU 経済学',
+      'hero.meta2': 'アラインメント',
+      'hero.meta3': '解釈可能性',
+      'about.label': '01 · アイデンティティ',
+      'about.title': '概要',
+      'about.p1': '私はサンノゼ在住の20歳の研究者で、SJSUで経済学を学びながら、大学院まで、あるいは永遠に出会わないような問題に独自に取り組んでいます。私の研究は機械学習理論、アラインメント形式主義、存在リスク定量化の収束点にあります。',
+      'about.p2': '私は従来のMLパイプラインからは来ていません。資格の許可を待ちませんでした。メサ目的の出現を研究するシミュレーション環境を構築しました。コンフォーマル予測フレームワークをゼロから書きました。847,000のトレースにわたって幻覚不可能性を定量化しました。研究が証明しています。',
+      'about.p3': '私の信念はシンプルです：この技術は人類の繁栄のための最大の力になるか、私たちが最後に作る発明になるかのどちらかです。私は前者を確実にするツールを構築しています。地位のためでもなく、肩書きのためでもなく、賭けがそれを求めているからです。',
+      'about.human': '研究の向こう側には — 私は父親であり、システムとその壊れ方に魅了されて育った人間です。18歳でニューラルネットワークのアーキテクチャを独学しました。経済学の教科書を読む前にボストロムを読みました。同年代のほとんどの人が全く別のことを考えている時に、アラインメントについて考えています。これはキャリアの一手ではありません。やめられないことなのです。',
+      'about.skills': '中核技術能力',
+      'exp.label': '02 · 深度',
+      'exp.title': '技術的専門知識',
+      'exp.subtitle': '中核研究領域と方法論的厳密性',
+      'demos.label': '03 · インタラクティブ',
+      'demos.title': 'ライブデモ',
+      'demos.subtitle': '各デモは同じ問題への異なるレンズです：知能が基盤非依存になったとき何が起こるか。',
+      'archive.label': '04 · アーカイブ',
+      'archive.title': '変容研究アーカイブ',
+      'archive.subtitle': '研究スレッドの完全なインデックス — アラインメント形式主義から存在リスク定量化まで。',
+      'research.label': '05 · 論文',
+      'research.title': '研究',
+      'research.subtitle': 'アラインメント、解釈可能性、リスクに関する選択された研究',
+      'resume.label': '06 · 履歴書',
+      'resume.title': '履歴書',
+      'resume.work': '研究と仕事',
+      'resume.edu': '教育',
+      'resume.download': '完全な履歴書をダウンロード（PDF）',
+      'stack.label': '07 · ツール',
+      'stack.title': '技術スタックと方法論',
+      'footer.credit': 'S. K. コットレル — AI安全性研究 — 2025',
+      'status.updated': '更新日',
+    },
+    fr: {
+      'nav.about': 'À propos',
+      'nav.expertise': 'Expertise',
+      'nav.demos': 'Démos',
+      'nav.archive': 'Archives',
+      'nav.research': 'Recherche',
+      'nav.resume': 'CV',
+      'nav.stack': 'Stack',
+      'hero.tag': 'Recherche en sécurité de l\'IA',
+      'hero.description': 'Chercheur indépendant travaillant à l\'intersection de la théorie de l\'alignement, de l\'interprétabilité et de la quantification du risque existentiel. Construction de cadres formels pour garantir que l\'intelligence reste compréhensible, contrôlable et sûre.',
+      'hero.meta1': 'SJSU Économie',
+      'hero.meta2': 'Alignement',
+      'hero.meta3': 'Interprétabilité',
+      'about.label': '01 · Identité',
+      'about.title': 'À propos',
+      'about.p1': 'Je suis un chercheur de 20 ans basé à San Jose, étudiant l\'économie à SJSU tout en poursuivant indépendamment des questions que la plupart des gens ne rencontrent qu\'en doctorat — ou jamais. Mon travail se situe à la convergence de la théorie de l\'apprentissage automatique, du formalisme d\'alignement et de la quantification du risque existentiel.',
+      'about.p2': 'Je ne viens pas d\'un pipeline ML traditionnel. Je n\'ai pas attendu la permission d\'un diplôme. J\'ai construit des environnements de simulation pour étudier l\'émergence des mésa-objectifs. J\'ai écrit des cadres de prédiction conforme à partir de zéro. J\'ai quantifié l\'impossibilité d\'hallucination sur 847 000 traces. Le travail parle de lui-même.',
+      'about.p3': 'Ma conviction est simple : cette technologie sera soit la plus grande force de prospérité humaine, soit la dernière invention que nous ferons jamais. Je construis les outils pour garantir la première option. Pas pour le statut. Pas pour les titres. Parce que les enjeux l\'exigent.',
+      'about.human': 'Au-delà de la recherche — je suis père, un être humain qui a grandi fasciné par les systèmes et comment ils se brisent. J\'ai appris les architectures de réseaux neuronaux à 18 ans. J\'ai lu Bostrom avant mes manuels d\'économie. Je pense à l\'alignement quand la plupart des gens de mon âge pensent à tout autre chose. Ce n\'est pas un choix de carrière. C\'est ce que je ne peux pas arrêter de faire.',
+      'about.skills': 'Compétences techniques fondamentales',
+      'exp.label': '02 · Profondeur',
+      'exp.title': 'Expertise technique',
+      'exp.subtitle': 'Domaines de recherche fondamentaux et rigueur méthodologique',
+      'demos.label': '03 · Interactif',
+      'demos.title': 'Démos en direct',
+      'demos.subtitle': 'Chaque démo est un angle différent sur le même problème : que se passe-t-il quand l\'intelligence devient indépendante du substrat.',
+      'archive.label': '04 · Archives',
+      'archive.title': 'Archives de recherche Transmutation',
+      'archive.subtitle': 'Index complet des fils de recherche — du formalisme d\'alignement à la quantification du risque existentiel.',
+      'research.label': '05 · Articles',
+      'research.title': 'Recherche',
+      'research.subtitle': 'Travaux sélectionnés en alignement, interprétabilité et risque',
+      'resume.label': '06 · CV',
+      'resume.title': 'Curriculum Vitae',
+      'resume.work': 'Recherche & Travail',
+      'resume.edu': 'Formation',
+      'resume.download': 'Télécharger le CV complet (PDF)',
+      'stack.label': '07 · Outils',
+      'stack.title': 'Stack & Méthode',
+      'footer.credit': 'S. K. Cottrell — Recherche en sécurité de l\'IA — 2025',
+      'status.updated': 'Mis à jour',
+    },
+    de: {
+      'nav.about': 'Über mich',
+      'nav.expertise': 'Expertise',
+      'nav.demos': 'Demos',
+      'nav.archive': 'Archiv',
+      'nav.research': 'Forschung',
+      'nav.resume': 'Lebenslauf',
+      'nav.stack': 'Stack',
+      'hero.tag': 'KI-Sicherheitsforschung',
+      'hero.description': 'Unabhängiger Forscher an der Schnittstelle von Alignment-Theorie, Interpretierbarkeit und existenzieller Risikoquantifizierung. Aufbau formaler Rahmenwerke, um sicherzustellen, dass Intelligenz verständlich, kontrollierbar und sicher bleibt.',
+      'hero.meta1': 'SJSU Wirtschaft',
+      'hero.meta2': 'Alignment',
+      'hero.meta3': 'Interpretierbarkeit',
+      'about.label': '01 · Identität',
+      'about.title': 'Über mich',
+      'about.p1': 'Ich bin ein 20-jähriger Forscher in San Jose, studiere Wirtschaftswissenschaften an der SJSU und verfolge unabhängig Fragen, denen die meisten Menschen erst im Promotionsstudium begegnen — oder nie. Meine Arbeit liegt an der Konvergenz von maschineller Lerntheorie, Alignment-Formalismus und existenzieller Risikoquantifizierung.',
+      'about.p2': 'Ich komme nicht aus einer traditionellen ML-Pipeline. Ich habe nicht auf die Erlaubnis eines Abschlusses gewartet. Ich habe Simulationsumgebungen gebaut, um Mesa-Ziel-Emergenz zu studieren. Ich habe konforme Vorhersage-Frameworks von Grund auf geschrieben. Ich habe die Unmöglichkeit von Halluzination über 847.000 Traces quantifiziert. Die Arbeit spricht für sich.',
+      'about.p3': 'Meine Überzeugung ist einfach: Diese Technologie wird entweder die größte Kraft für menschlichen Wohlstand sein oder die letzte Erfindung, die wir je machen. Ich baue die Werkzeuge, um ersteres sicherzustellen. Nicht für Status. Nicht für Titel. Weil der Einsatz es erfordert.',
+      'about.human': 'Jenseits der Forschung — ich bin Vater, ein Mensch, der fasziniert von Systemen und deren Bruchstellen aufgewachsen ist. Ich habe mir mit 18 Neuronale-Netzwerk-Architekturen selbst beigebracht. Ich habe Bostrom gelesen, bevor ich meine Wirtschaftslehrbücher gelesen habe. Ich denke über Alignment nach, wenn die meisten in meinem Alter an ganz andere Dinge denken. Das ist kein Karriereschritt. Es ist das, was ich nicht aufhören kann zu tun.',
+      'about.skills': 'Kernkompetenzen',
+      'exp.label': '02 · Tiefe',
+      'exp.title': 'Technische Expertise',
+      'exp.subtitle': 'Kernforschungsbereiche und methodische Strenge',
+      'demos.label': '03 · Interaktiv',
+      'demos.title': 'Live-Demos',
+      'demos.subtitle': 'Jede Demo ist ein anderer Blickwinkel auf das gleiche Problem: Was passiert, wenn Intelligenz substratunabhängig wird.',
+      'archive.label': '04 · Archiv',
+      'archive.title': 'Transmutationsforschungsarchiv',
+      'archive.subtitle': 'Vollständiger Index der Forschungsstränge — von Alignment-Formalismus bis zur existenziellen Risikoquantifizierung.',
+      'research.label': '05 · Arbeiten',
+      'research.title': 'Forschung',
+      'research.subtitle': 'Ausgewählte Arbeiten zu Alignment, Interpretierbarkeit und Risiko',
+      'resume.label': '06 · Lebenslauf',
+      'resume.title': 'Lebenslauf',
+      'resume.work': 'Forschung & Arbeit',
+      'resume.edu': 'Ausbildung',
+      'resume.download': 'Vollständigen Lebenslauf herunterladen (PDF)',
+      'stack.label': '07 · Werkzeuge',
+      'stack.title': 'Stack & Methode',
+      'footer.credit': 'S. K. Cottrell — KI-Sicherheitsforschung — 2025',
+      'status.updated': 'Aktualisiert',
+    },
+    it: {
+      'nav.about': 'Chi sono',
+      'nav.expertise': 'Competenze',
+      'nav.demos': 'Demo',
+      'nav.archive': 'Archivio',
+      'nav.research': 'Ricerca',
+      'nav.resume': 'Curriculum',
+      'nav.stack': 'Stack',
+      'hero.tag': 'Ricerca sulla sicurezza dell\'IA',
+      'hero.description': 'Ricercatore indipendente che lavora all\'intersezione tra teoria dell\'allineamento, interpretabilità e quantificazione del rischio esistenziale. Costruzione di framework formali per garantire che l\'intelligenza rimanga comprensibile, controllabile e sicura.',
+      'hero.meta1': 'SJSU Economia',
+      'hero.meta2': 'Allineamento',
+      'hero.meta3': 'Interpretabilità',
+      'about.label': '01 · Identità',
+      'about.title': 'Chi sono',
+      'about.p1': 'Sono un ricercatore ventenne con base a San Jose, studio economia alla SJSU mentre perseguo indipendentemente domande che la maggior parte delle persone non incontra fino al dottorato — o mai. Il mio lavoro si colloca alla convergenza tra teoria del machine learning, formalismo dell\'allineamento e quantificazione del rischio esistenziale.',
+      'about.p2': 'Non provengo da una pipeline ML tradizionale. Non ho aspettato il permesso di una credenziale. Ho costruito ambienti di simulazione per studiare l\'emergenza dei mesa-obiettivi. Ho scritto framework di predizione conforme da zero. Ho quantificato l\'impossibilità di allucinazione su 847.000 tracce. Il lavoro parla da sé.',
+      'about.p3': 'La mia convinzione è semplice: questa tecnologia sarà o la più grande forza per la prosperità umana o l\'ultima invenzione che faremo mai. Sto costruendo gli strumenti per garantire che sia la prima. Non per lo status. Non per i titoli. Perché la posta in gioco lo richiede.',
+      'about.human': 'Oltre la ricerca — sono un padre, un essere umano cresciuto affascinato dai sistemi e da come si rompono. Ho imparato da autodidatta le architetture delle reti neurali a 18 anni. Ho letto Bostrom prima dei miei libri di economia. Penso all\'allineamento quando la maggior parte dei miei coetanei pensa a tutt\'altro. Questa non è una mossa di carriera. È ciò che non riesco a smettere di fare.',
+      'about.skills': 'Competenze tecniche fondamentali',
+      'exp.label': '02 · Profondità',
+      'exp.title': 'Competenza tecnica',
+      'exp.subtitle': 'Domini di ricerca fondamentali e rigore metodologico',
+      'demos.label': '03 · Interattivo',
+      'demos.title': 'Demo dal vivo',
+      'demos.subtitle': 'Ogni demo è una lente diversa sullo stesso problema: cosa succede quando l\'intelligenza diventa indipendente dal substrato.',
+      'archive.label': '04 · Archivio',
+      'archive.title': 'Archivio di ricerca Trasmutazione',
+      'archive.subtitle': 'Indice completo dei filoni di ricerca — dal formalismo dell\'allineamento alla quantificazione del rischio esistenziale.',
+      'research.label': '05 · Articoli',
+      'research.title': 'Ricerca',
+      'research.subtitle': 'Lavori selezionati su allineamento, interpretabilità e rischio',
+      'resume.label': '06 · CV',
+      'resume.title': 'Curriculum Vitae',
+      'resume.work': 'Ricerca & Lavoro',
+      'resume.edu': 'Formazione',
+      'resume.download': 'Scarica CV completo (PDF)',
+      'stack.label': '07 · Strumenti',
+      'stack.title': 'Stack & Metodo',
+      'footer.credit': 'S. K. Cottrell — Ricerca sulla sicurezza dell\'IA — 2025',
+      'status.updated': 'Aggiornato',
+    }
+  };
+
+  // Data-i18n attribute mapping for translation targets
+  const i18nMap = [
+    { sel: '.nav-links a[href="#about"]', key: 'nav.about' },
+    { sel: '.nav-links a[href="#expertise"]', key: 'nav.expertise' },
+    { sel: '.nav-links a[href="#demos"]', key: 'nav.demos' },
+    { sel: '.nav-links a[href="#archive"]', key: 'nav.archive' },
+    { sel: '.nav-links a[href="#research"]', key: 'nav.research' },
+    { sel: '.nav-links a[href="#resume"]', key: 'nav.resume' },
+    { sel: '.nav-links a[href="#stack"]', key: 'nav.stack' },
+    { sel: '.hero-tag', key: 'hero.tag' },
+    { sel: '.hero-description', key: 'hero.description' },
+    { sel: '#about .section-label', key: 'about.label' },
+    { sel: '#about .section-title', key: 'about.title' },
+    { sel: '.about-text > p:nth-child(1)', key: 'about.p1' },
+    { sel: '.about-text > p:nth-child(2)', key: 'about.p2' },
+    { sel: '.about-text > p:nth-child(3)', key: 'about.p3' },
+    { sel: '.about-human p', key: 'about.human' },
+    { sel: '.skills-title', key: 'about.skills', keepBefore: true },
+    { sel: '#expertise .section-label', key: 'exp.label' },
+    { sel: '#expertise .section-title', key: 'exp.title' },
+    { sel: '#expertise .section-subtitle', key: 'exp.subtitle' },
+    { sel: '#demos .section-label', key: 'demos.label' },
+    { sel: '#demos .section-title', key: 'demos.title' },
+    { sel: '#demos .section-subtitle', key: 'demos.subtitle' },
+    { sel: '#archive .section-label', key: 'archive.label' },
+    { sel: '#archive .section-title', key: 'archive.title' },
+    { sel: '#archive .section-subtitle', key: 'archive.subtitle' },
+    { sel: '#research .section-label', key: 'research.label' },
+    { sel: '#research .section-title', key: 'research.title' },
+    { sel: '#research .section-subtitle', key: 'research.subtitle' },
+    { sel: '#resume .section-label', key: 'resume.label' },
+    { sel: '#resume .section-title', key: 'resume.title' },
+    { sel: '#stack .section-label', key: 'stack.label' },
+    { sel: '#stack .section-title', key: 'stack.title' },
+    { sel: '.footer-left', key: 'footer.credit', keepJp: true },
+    { sel: '.status-item:nth-child(3) .label', key: 'status.updated' },
+  ];
+
+  function setLang(lang) {
+    const dict = translations[lang];
+    if (!dict) return;
+
+    i18nMap.forEach(({ sel, key, keepBefore, keepJp }) => {
+      const el = document.querySelector(sel);
+      if (!el || !dict[key]) return;
+
+      if (keepJp) {
+        const jpSpan = el.querySelector('.jp-text');
+        el.childNodes[0].textContent = dict[key] + '\n';
+        return;
+      }
+
+      if (keepBefore) {
+        // Preserve ::before pseudo by just setting text
+        el.textContent = dict[key];
+        return;
+      }
+
+      // For section-labels, preserve the ::before
+      if (el.classList.contains('section-label')) {
+        el.textContent = dict[key];
+        return;
+      }
+
+      el.textContent = dict[key];
+    });
+
+    // Update hero meta spans
+    const metaSpans = document.querySelectorAll('.hero-meta span');
+    if (metaSpans.length >= 3 && dict['hero.meta1']) {
+      metaSpans[0].innerHTML = '<span class="dot"></span>' + dict['hero.meta1'];
+      metaSpans[1].innerHTML = '<span class="dot"></span>' + dict['hero.meta2'];
+      metaSpans[2].innerHTML = '<span class="dot"></span>' + dict['hero.meta3'];
+    }
+
+    // Update resume column headers
+    const resumeHeaders = document.querySelectorAll('.resume-col h3');
+    if (resumeHeaders.length >= 2 && dict['resume.work']) {
+      resumeHeaders[0].textContent = dict['resume.work'];
+      resumeHeaders[1].textContent = dict['resume.edu'];
+    }
+
+    // Update resume download button text
+    const dlBtn = document.querySelector('.resume-download');
+    if (dlBtn && dict['resume.download']) {
+      const svg = dlBtn.querySelector('svg').outerHTML;
+      dlBtn.innerHTML = svg + '\n          ' + dict['resume.download'];
+    }
+
+    // Update active language in dropdown
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.classList.toggle('active', opt.dataset.lang === lang);
+    });
+    document.getElementById('langCurrent').textContent = lang.toUpperCase();
+    document.getElementById('langToggle').classList.remove('open');
+    document.documentElement.lang = lang;
+  }
+
+  // Language option click handlers
+  document.querySelectorAll('.lang-option').forEach(btn => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+
+  // Close language dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    const toggle = document.getElementById('langToggle');
+    if (!toggle.contains(e.target)) {
+      toggle.classList.remove('open');
+    }
+  });
 });
 </script>
 

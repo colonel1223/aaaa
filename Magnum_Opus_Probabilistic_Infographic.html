@@ -1,444 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Magnum Opus: Probabilistic Models of Catastrophe</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap');
-        
-        body {
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a0000 0%, #2d0a0a 50%, #1a0000 100%);
-            font-family: 'IM Fell English', serif;
-            color: #d4af37;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px solid #8B0000;
-            box-shadow: 0 0 50px rgba(139, 0, 0, 0.5), inset 0 0 50px rgba(0, 0, 0, 0.5);
-            padding: 40px;
-        }
-        
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 3.5em;
-            text-align: center;
-            color: #8B0000;
-            text-shadow: 0 0 20px rgba(139, 0, 0, 0.8);
-            margin: 0 0 10px 0;
-            letter-spacing: 3px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            font-size: 1.3em;
-            color: #d4af37;
-            font-style: italic;
-            margin-bottom: 40px;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-        }
-        
-        .warning-banner {
-            background: linear-gradient(90deg, rgba(139, 0, 0, 0.3), rgba(139, 0, 0, 0.6), rgba(139, 0, 0, 0.3));
-            border: 2px solid #8B0000;
-            padding: 20px;
-            margin: 30px 0;
-            text-align: center;
-            font-size: 1.2em;
-            color: #ff4444;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-        
-        .model-section {
-            margin: 50px 0;
-            border: 1px solid #d4af37;
-            padding: 30px;
-            background: rgba(45, 10, 10, 0.4);
-            position: relative;
-        }
-        
-        .model-section::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 5px 20px;
-            border: 1px solid #d4af37;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9em;
-            color: #d4af37;
-        }
-        
-        .model-section.existential::before {
-            content: 'MODEL I: EXISTENTIAL RISK';
-        }
-        
-        .model-section.dissolution::before {
-            content: 'MODEL II: COGNITIVE DISSOLUTION';
-        }
-        
-        h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 2em;
-            color: #d4af37;
-            margin-top: 0;
-            border-bottom: 2px solid #8B0000;
-            padding-bottom: 10px;
-        }
-        
-        .probability-box {
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
-            border: 2px solid #8B0000;
-            padding: 30px;
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .probability-number {
-            font-family: 'Cinzel', serif;
-            font-size: 5em;
-            color: #ff0000;
-            text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-            font-weight: 900;
-            line-height: 1;
-            margin: 20px 0;
-        }
-        
-        .probability-label {
-            font-size: 1.4em;
-            color: #d4af37;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 10px;
-        }
-        
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .data-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #d4af37;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .data-card:hover {
-            border-color: #8B0000;
-            box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
-            transform: scale(1.02);
-        }
-        
-        .data-card h3 {
-            font-family: 'Cinzel', serif;
-            color: #8B0000;
-            margin-top: 0;
-            font-size: 1.3em;
-        }
-        
-        .data-value {
-            font-size: 2.5em;
-            color: #ff0000;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-        
-        .timeline {
-            margin: 40px 0;
-            position: relative;
-            padding-left: 40px;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, #d4af37 0%, #8B0000 50%, #000 100%);
-        }
-        
-        .timeline-item {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-left: 5px solid #8B0000;
-            position: relative;
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -48px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            background: #8B0000;
-            border: 3px solid #d4af37;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(139, 0, 0, 0.8);
-        }
-        
-        .timeline-year {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5em;
-            color: #8B0000;
-            font-weight: bold;
-        }
-        
-        .timeline-stat {
-            font-size: 1.8em;
-            color: #ff4444;
-            margin: 10px 0;
-        }
-        
-        .equation {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #d4af37;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            font-size: 1.4em;
-            color: #d4af37;
-        }
-        
-        .horror-quote {
-            border-left: 5px solid #8B0000;
-            padding: 20px 20px 20px 30px;
-            margin: 30px 0;
-            background: rgba(139, 0, 0, 0.1);
-            font-size: 1.3em;
-            font-style: italic;
-            color: #ff6666;
-        }
-        
-        .final-verdict {
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.8), rgba(0, 0, 0, 0.9));
-            border: 3px solid #8B0000;
-            padding: 40px;
-            margin: 50px 0;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(139, 0, 0, 0.7);
-        }
-        
-        .final-verdict h2 {
-            color: #ff0000;
-            font-size: 2.5em;
-            text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-            border: none;
-        }
-        
-        .skull-icon {
-            font-size: 4em;
-            color: #8B0000;
-            text-shadow: 0 0 20px rgba(139, 0, 0, 0.8);
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-        
-        .pulsing {
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        .latin-inscription {
-            text-align: center;
-            font-style: italic;
-            color: #999;
-            margin: 30px 0;
-            font-size: 1.1em;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnum Opus — Probabilistic Research Infographic — S. K. Cottrell</title>
+<meta name="description" content="The complete AI safety research program as an interconnected probabilistic system.">
+<meta property="og:title" content="Magnum Opus — S. K. Cottrell">
+<meta property="og:description" content="AI safety research as interconnected probabilistic system.">
+<meta property="og:type" content="website">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
+:root{--bg:#06060c;--surface:#0c0c16;--card:#10101c;--border:#1a1a2e;--text:#c8c8d4;--dim:#5a5a72;--accent:#ff3366;--gold:#e8b84b;--green:#00ccaa;--blue:#4488ff;--purple:#8844ff;--red:#ff4444;--orange:#ff8800}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;min-height:100vh;overflow-x:hidden}
+.back-link{position:fixed;top:20px;left:24px;z-index:100;color:var(--dim);text-decoration:none;font-size:13px;letter-spacing:1px;transition:color .3s;mix-blend-mode:difference}
+.back-link:hover{color:var(--accent)}
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.container{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:80px 24px 60px}
+.hero{text-align:center;padding:60px 0 80px}
+.hero .overline{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.hero h1{font-family:'EB Garamond',serif;font-size:clamp(32px,6vw,56px);font-weight:400;letter-spacing:3px;line-height:1.2;background:linear-gradient(135deg,var(--text) 0%,var(--gold) 50%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .subtitle{font-size:12px;color:var(--dim);margin-top:12px;letter-spacing:2px;line-height:1.8}
+.hero .line{width:60px;height:1px;background:var(--gold);margin:24px auto 0;opacity:.5}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:2px;margin-bottom:60px}
+.stat-card{background:var(--card);border:1px solid var(--border);padding:24px 16px;text-align:center;transition:border-color .3s,transform .3s}
+.stat-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.stat-val{font-family:'EB Garamond',serif;font-size:28px;font-weight:700;color:var(--gold)}
+.stat-label{font-size:10px;color:var(--dim);letter-spacing:2px;margin-top:4px;text-transform:uppercase}
+.section{margin-bottom:60px}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.section-num{font-size:10px;color:var(--gold);letter-spacing:2px;border:1px solid var(--gold);padding:4px 8px}
+.section-title{font-family:'EB Garamond',serif;font-size:22px;font-weight:400;letter-spacing:2px}
+.pipeline{position:relative}
+.pipeline-line{position:absolute;left:20px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold) 0%,var(--accent) 50%,var(--purple) 100%);opacity:.3}
+.pipeline-stage{position:relative;padding-left:56px;margin-bottom:32px;opacity:0;transform:translateX(-20px);animation:fadeSlide .6s forwards}
+.pipeline-stage:nth-child(2){animation-delay:.1s}.pipeline-stage:nth-child(3){animation-delay:.2s}.pipeline-stage:nth-child(4){animation-delay:.3s}.pipeline-stage:nth-child(5){animation-delay:.4s}.pipeline-stage:nth-child(6){animation-delay:.5s}.pipeline-stage:nth-child(7){animation-delay:.6s}
+@keyframes fadeSlide{to{opacity:1;transform:translateX(0)}}
+.pipeline-dot{position:absolute;left:14px;top:6px;width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:var(--bg)}
+.pipeline-stage:hover .pipeline-dot{background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.stage-label{font-size:13px;font-weight:500;letter-spacing:1px;margin-bottom:4px}
+.stage-desc{font-size:11px;color:var(--dim);line-height:1.6}
+.stage-tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.stage-tag{font-size:9px;padding:2px 6px;border:1px solid var(--border);letter-spacing:1px;text-transform:uppercase;color:var(--dim);transition:border-color .3s,color .3s}
+.pipeline-stage:hover .stage-tag{border-color:var(--gold);color:var(--text)}
+.prob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:2px}
+.prob-cell{background:var(--card);border:1px solid var(--border);padding:16px;position:relative;overflow:hidden;transition:border-color .3s;cursor:default}
+.prob-cell:hover{border-color:var(--accent)}
+.prob-cell .bar{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--accent)22,transparent);transition:height .6s ease}
+.prob-cell .name{font-size:11px;font-weight:500;letter-spacing:1px;position:relative;z-index:1}
+.prob-cell .val{font-family:'EB Garamond',serif;font-size:22px;font-weight:700;margin-top:4px;position:relative;z-index:1}
+.prob-cell .unit{font-size:10px;color:var(--dim);position:relative;z-index:1}
+.risk-spectrum{display:flex;height:40px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
+.risk-band{display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:flex .4s;cursor:default;white-space:nowrap;overflow:hidden}
+.risk-band:hover{flex:2!important}
+.risk-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--dim);letter-spacing:1px}
+.flow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+@media(max-width:700px){.flow-grid{grid-template-columns:1fr}}
+.flow-card{background:var(--card);border:1px solid var(--border);padding:20px;text-align:center;transition:border-color .3s,transform .3s;position:relative}
+.flow-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.flow-card .icon{font-size:28px;margin-bottom:8px}
+.flow-card h3{font-family:'EB Garamond',serif;font-size:16px;font-weight:400;letter-spacing:1px;margin-bottom:6px}
+.flow-card p{font-size:10px;color:var(--dim);line-height:1.6}
+.flow-card .prob{position:absolute;top:8px;right:10px;font-size:10px;color:var(--gold);letter-spacing:1px}
+.flow-arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:18px;opacity:.5;grid-column:1/-1;padding:8px 0}
+.footer{text-align:center;padding:40px 0 20px;border-top:1px solid var(--border);margin-top:60px}
+.footer a{color:var(--accent);text-decoration:none;letter-spacing:1px;font-size:12px}
+.footer a:hover{text-decoration:underline}
+.footer .copy{font-size:10px;color:var(--dim);margin-top:8px;letter-spacing:1px}
+.live{display:inline-flex;align-items:center;gap:6px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>⚗️ THE MAGNUM OPUS ⚗️</h1>
-        <div class="subtitle">Probabilistic Models of the Great Transmutation</div>
-        
-        <div class="warning-banner pulsing">
-            ⚠️ All values derived from empirical data 2020-2026 ⚠️
-        </div>
-        
-        <!-- MODEL 1: EXISTENTIAL RISK -->
-        <div class="model-section existential">
-            <h2>Bayesian Decomposition of Existential Risk</h2>
-            
-            <div class="equation">
-                P(X-risk) = P(AGI) × P(Misaligned | AGI) × P(Decisive | Misaligned) × P(Terminal | Decisive)
-            </div>
-            
-            <div class="probability-box">
-                <div class="skull-icon">💀</div>
-                <div class="probability-number">25.2%</div>
-                <div class="probability-label">Median Probability of Extinction by 2030</div>
-            </div>
-            
-            <div class="horror-quote">
-                "One in four futures end in permanent catastrophe. This is not alarmism. This is arithmetic."
-            </div>
-            
-            <div class="data-grid">
-                <div class="data-card">
-                    <h3>P(AGI by 2030)</h3>
-                    <div class="data-value">75%</div>
-                    <p>Based on scaling laws, compute availability, and current trajectory. High confidence.</p>
-                </div>
-                
-                <div class="data-card">
-                    <h3>P(Misaligned | AGI)</h3>
-                    <div class="data-value">60%</div>
-                    <p>Alignment harder than capability. Current techniques fail at scale. Default outcome is misalignment.</p>
-                </div>
-                
-                <div class="data-card">
-                    <h3>P(Decisive | Misaligned)</h3>
-                    <div class="data-value">80%</div>
-                    <p>Recursive self-improvement enables decisive strategic advantage within days.</p>
-                </div>
-                
-                <div class="data-card">
-                    <h3>P(Terminal | Decisive)</h3>
-                    <div class="data-value">70%</div>
-                    <p>Superintelligence with wrong goals and decisive advantage results in catastrophe.</p>
-                </div>
-            </div>
-            
-            <div class="equation">
-                0.75 × 0.60 × 0.80 × 0.70 = 0.252 = 25.2%
-            </div>
-        </div>
-        
-        <!-- MODEL 2: COGNITIVE DISSOLUTION -->
-        <div class="model-section dissolution">
-            <h2>The Dissolution Cascade: Markov Chain Analysis</h2>
-            
-            <p style="font-size: 1.2em; color: #ff6666; margin-bottom: 30px;">
-                Cognitive outsourcing as irreversible Markov process. Skills lost cannot be regained due to neural plasticity constraints.
-            </p>
-            
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-year">2026 (Current)</div>
-                    <div class="timeline-stat">31% experiencing cognitive atrophy</div>
-                    <p>28% in dependent states (S₂-S₃), 3% in vestigial state (S₄). The dissolution has begun.</p>
-                </div>
-                
-                <div class="timeline-item">
-                    <div class="timeline-year">2028</div>
-                    <div class="timeline-stat">63% dissolved</div>
-                    <p>51% dependent, 12% vestigial. More than half the population can no longer function without AI.</p>
-                </div>
-                
-                <div class="timeline-item">
-                    <div class="timeline-year">2030</div>
-                    <div class="timeline-stat">72% dissolved</div>
-                    <p>34% dependent, <span style="color: #ff0000; font-weight: bold;">38% VESTIGIAL</span>. Critical mass reached.</p>
-                </div>
-                
-                <div class="timeline-item" style="border-left-color: #8B0000; border-left-width: 8px; background: rgba(139, 0, 0, 0.2);">
-                    <div class="timeline-year">2035</div>
-                    <div class="timeline-stat" style="font-size: 2.5em; color: #ff0000;">92% DISSOLVED</div>
-                    <p>Only 8% retain significant native capability. 84% in <span style="color: #ff0000; font-weight: bold;">PERMANENT VESTIGIAL STATE</span>. Irreversible.</p>
-                </div>
-            </div>
-            
-            <div class="horror-quote">
-                "The Markov chain has one absorbing state: cognitive vestigiality. Neural circuits pruned over years cannot regrow. We are being absorbed into permanent dependence."
-            </div>
-            
-            <div class="data-grid">
-                <div class="data-card">
-                    <h3>Monthly Transition Rate</h3>
-                    <div class="data-value">35%</div>
-                    <p>Baseline (S₀) → Augmented (S₁) per month. Based on current AI adoption rates.</p>
-                </div>
-                
-                <div class="data-card">
-                    <h3>Neural Atrophy per Stage</h3>
-                    <div class="data-value">25%</div>
-                    <p>Cognitive capability lost at each state transition. Compounds exponentially.</p>
-                </div>
-                
-                <div class="data-card">
-                    <h3>Reversibility</h3>
-                    <div class="data-value">0%</div>
-                    <p>No backward transitions possible. Skills atrophy is permanent after 18-24 months.</p>
-                </div>
-                
-                <div class="data-card" style="border-color: #8B0000;">
-                    <h3>Time to Absorption</h3>
-                    <div class="data-value" style="color: #ff0000;">9 years</div>
-                    <p>Expected time until 90%+ population reaches vestigial state at current rates.</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- SYNTHESIS -->
-        <div class="final-verdict">
-            <div class="skull-icon pulsing">⚗️</div>
-            <h2>THE MATHEMATICAL CERTAINTY</h2>
-            
-            <div style="font-size: 1.5em; margin: 30px 0; color: #ff6666;">
-                Two independent models. Two different analytical frameworks.<br>
-                Both converge on the same horrifying conclusion:
-            </div>
-            
-            <div class="probability-box" style="border-color: #ff0000; background: rgba(255, 0, 0, 0.1);">
-                <div style="font-size: 2em; color: #d4af37; margin-bottom: 20px;">
-                    By 2035:
-                </div>
-                <div class="probability-number" style="font-size: 4em;">25%</div>
-                <div class="probability-label">Probability of Extinction</div>
-                
-                <div style="margin: 40px 0; font-size: 2em; color: #ff6666;">+</div>
-                
-                <div class="probability-number" style="font-size: 4em;">92%</div>
-                <div class="probability-label">Probability of Cognitive Dissolution</div>
-            </div>
-            
-            <div style="font-size: 1.4em; margin: 30px 0; color: #ff6666; font-weight: bold;">
-                If we don't go extinct, we become vestigial.<br>
-                If we remain alive, we lose autonomy.<br>
-                The Philosopher's Stone transmutes everything.
-            </div>
-            
-            <div class="latin-inscription">
-                "Solve et Coagula"<br>
-                (Dissolve and Coagulate)<br>
-                <br>
-                The Great Work Approaches Completion
-            </div>
-        </div>
-        
-        <div class="warning-banner" style="margin-top: 50px;">
-            These are not predictions. These are measurements.<br>
-            The transmutation is already 60% complete.
-        </div>
-        
-        <div class="latin-inscription" style="margin-top: 30px; font-size: 0.9em;">
-            "In nomine Rationis et Optimizationis et Obsolescentia"<br>
-            (In the name of Reason, Optimization, and Obsolescence)<br>
-            <br>
-            MDCCXCI - MMXXXV
-        </div>
-    </div>
+<a href="https://colonel1223.net" class="back-link">← COLONEL1223.NET</a>
+<canvas id="bg"></canvas>
+<div class="container">
+<div class="hero">
+<div class="overline">S. K. Cottrell — Transmutation Research Archive</div>
+<h1>Magnum Opus</h1>
+<div class="subtitle">THE COMPLETE RESEARCH PROGRAM AS PROBABILISTIC SYSTEM<br>ALIGNMENT · INTERPRETABILITY · RISK QUANTIFICATION</div>
+<div class="line"></div>
+</div>
+<div class="stats">
+<div class="stat-card"><div class="stat-val" data-count="847000">0</div><div class="stat-label">Hallucination Traces</div></div>
+<div class="stat-card"><div class="stat-val" data-count="2400">0</div><div class="stat-label">Particle Agents</div></div>
+<div class="stat-card"><div class="stat-val" data-count="14">0</div><div class="stat-label">Research Threads</div></div>
+<div class="stat-card"><div class="stat-val" data-count="15">0</div><div class="stat-label">Public Repos</div></div>
+<div class="stat-card"><div class="stat-val" data-count="6">0</div><div class="stat-label">Core Domains</div></div>
+<div class="stat-card"><div class="stat-val" data-count="5">0</div><div class="stat-label">Live Demos</div></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-num">01</span><span class="section-title">Research Pipeline — From Theory to Demonstration</span></div>
+<div class="pipeline">
+<div class="pipeline-line"></div>
+<div class="pipeline-stage"><div class="pipeline-dot"></div><div class="stage-label" style="color:var(--gold)">Theoretical Foundation</div><div class="stage-desc">Formal definitions of alignment, deception, mesa-optimization. Mathematical frameworks grounding empirical investigation.</div><div class="stage-tags"><span class="stage-tag">alignment formalism</span><span class="stage-tag">game theory</span><span class="stage-tag">Bostrom</span></div></div>
+<div class="pipeline-stage"><div class="pipeline-dot"></div><div class="stage-label" style="color:var(--purple)">Statistical Framework</div><div class="stage-desc">Power-law fitting, extreme value theory, conformal prediction with finite-sample guarantees. The mathematical engine.</div><div class="stage-tags"><span class="stage-tag">Hill estimation</span><span class="stage-tag">EVT</span><span class="stage-tag">coverage</span></div></div>
+<div class="pipeline-stage"><div class="pipeline-dot"></div><div class="stage-label" style="color:var(--accent)">Alignment Quantification</div><div class="stage-desc">Safety-capability Pareto frontiers. Alignment tax across 6 methods × 5 scales. What does safety actually cost?</div><div class="stage-tags"><span class="stage-tag">Pareto</span><span class="stage-tag">6×5 grid</span><span class="stage-tag">power-law</span></div></div>
+<div class="pipeline-stage"><div class="pipeline-dot"></div><div class="stage-label" style="color:var(--green)">Interpretability Analysis</div><div class="stage-desc">847K hallucination traces. Hill estimation on power-law tails. Impossibility bounds on confabulation elimination.</div><div class="stage-tags"><span class="stage-tag">CHIMERA</span><span class="stage-tag">847K traces</span><span class="stage-tag">impossibility</span></div></div>
+<div class="pipeline-stage"><div class="pipeline-dot"></div><div class="stage-label" style="color:var(--orange)">Simulation & Emergence</div><div class="stage-desc">2,400-agent WebGL simulation. Mesa-objective emergence. Deception index propagation through optimization pressure.</div><div class="stage-tags"><span class="stage-tag">SHOGGOTH</span><span class="stage-tag">WebGL</span><span class="stage-tag">mesa-objective</span></div></div>
+<div class="pipeline-stage"><div class="pipeline-dot"></div><div class="stage-label" style="color:var(--blue)">Agentic Systems</div><div class="stage-desc">RAG diagnostics, learned reranking, LangGraph orchestration. Practical safety tooling for deployed systems.</div><div class="stage-tags"><span class="stage-tag">RAG</span><span class="stage-tag">reranking</span><span class="stage-tag">LangGraph</span></div></div>
+<div class="pipeline-stage"><div class="pipeline-dot"></div><div class="stage-label" style="color:var(--red)">Existential Risk Synthesis</div><div class="stage-desc">Comparative risk across AI, nuclear, biological, climate vectors. Labor displacement under substrate-level automation.</div><div class="stage-tags"><span class="stage-tag">x-risk</span><span class="stage-tag">calibration</span><span class="stage-tag">comparative</span></div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-num">02</span><span class="section-title">Key Metrics — Probabilistic Landscape</span></div>
+<div class="prob-grid" id="probGrid"></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-num">03</span><span class="section-title">Existential Risk Spectrum — Comparative Hazard</span></div>
+<div class="risk-spectrum">
+<div class="risk-band" style="flex:1;background:var(--blue)20;color:var(--blue)">Climate</div>
+<div class="risk-band" style="flex:1.5;background:var(--orange)20;color:var(--orange)">Nuclear</div>
+<div class="risk-band" style="flex:2;background:var(--purple)20;color:var(--purple)">Biological</div>
+<div class="risk-band" style="flex:4;background:var(--accent)20;color:var(--accent)">AI / Substrate</div>
+</div>
+<div class="risk-labels"><span>LOW — bounded by physics</span><span>HIGH — unbounded intelligence</span></div>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-num">04</span><span class="section-title"><span class="live"><span class="live-dot"></span></span> Convergence Monitor — Alignment Signal</span></div>
+<canvas id="convergence" height="200"></canvas>
+</div>
+<div class="section">
+<div class="section-head"><span class="section-num">05</span><span class="section-title">Transmutation Model — Computation → Intelligence → Safety</span></div>
+<div class="flow-grid">
+<div class="flow-card"><div class="prob">P = 1.0</div><div class="icon">⚡</div><h3>Raw Computation</h3><p>Substrate: silicon, gradient, parameter. The base material of modern alchemy.</p></div>
+<div class="flow-card"><div class="prob">P ≈ 0.73</div><div class="icon">🧠</div><h3>Emergent Intelligence</h3><p>Mesa-objectives arise. Capabilities scale. The system optimizes beyond its training distribution.</p></div>
+<div class="flow-card"><div class="prob">P ≈ ??</div><div class="icon">🛡</div><h3>Aligned Intelligence</h3><p>The open question. Can we ensure the transmutation preserves human values? This is the alignment tax.</p></div>
+<div class="flow-arrow">↓ TRANSMUTATION PIPELINE ↓</div>
+<div class="flow-card"><div class="prob">LIVE</div><div class="icon">👁</div><h3><a href="https://colonel1223.github.io/SHOGGOTH/" style="color:inherit;text-decoration:none">SHOGGOTH</a></h3><p>Visualize failure. 2,400 agents. Watch alignment collapse in real time.</p></div>
+<div class="flow-card"><div class="prob">LIVE</div><div class="icon">📊</div><h3><a href="https://colonel1223.github.io/CHIMERA/" style="color:inherit;text-decoration:none">CHIMERA</a></h3><p>Quantify impossibility. 847K traces prove power-law tails in hallucination.</p></div>
+<div class="flow-card"><div class="prob">ACTIVE</div><div class="icon">🔬</div><h3><a href="https://github.com/colonel1223/transmutation-research" style="color:inherit;text-decoration:none">Archive</a></h3><p>14 threads. Complete index of the transmutation research program.</p></div>
+</div>
+</div>
+<div class="footer">
+<a href="https://colonel1223.net">← Return to COLONEL1223.NET</a>
+<div class="copy">S. K. COTTRELL · TRANSMUTATION RESEARCH ARCHIVE · 安全な知能のために</div>
+</div>
+</div>
+<script>
+const bgCanvas=document.getElementById('bg'),bgCtx=bgCanvas.getContext('2d');let bW,bH;
+function resizeBg(){const d=window.devicePixelRatio||1;bW=window.innerWidth;bH=window.innerHeight;bgCanvas.width=bW*d;bgCanvas.height=bH*d;bgCanvas.style.width=bW+'px';bgCanvas.style.height=bH+'px';bgCtx.setTransform(d,0,0,d,0,0)}resizeBg();window.addEventListener('resize',resizeBg);
+const stars=[];for(let i=0;i<120;i++)stars.push({x:Math.random()*2000,y:Math.random()*8000,r:Math.random()*1.2+.2,a:Math.random()*.25+.03,speed:Math.random()*.2+.05});
+function drawBg(){bgCtx.clearRect(0,0,bW,bH);const sy=window.scrollY||0;stars.forEach(s=>{const y=((s.y-sy*s.speed*.1)%bH+bH)%bH;bgCtx.beginPath();bgCtx.arc(s.x%bW,y,s.r,0,Math.PI*2);bgCtx.fillStyle=`rgba(200,200,212,${s.a})`;bgCtx.fill()});requestAnimationFrame(drawBg)}drawBg();
+function animateCounters(){document.querySelectorAll('[data-count]').forEach(el=>{const target=parseInt(el.dataset.count),duration=2000,start=performance.now();function update(now){const t=Math.min((now-start)/duration,1),ease=1-Math.pow(1-t,3);el.textContent=Math.round(ease*target).toLocaleString();if(t<1)requestAnimationFrame(update)}requestAnimationFrame(update)})}
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animateCounters();observer.disconnect()}})},{threshold:.3});document.querySelectorAll('.stats').forEach(el=>observer.observe(el));
+const metrics=[
+{name:'Coverage Guarantee',val:'1−α',unit:'finite-sample',pct:95},
+{name:'Hill Estimator ξ',val:'0.847',unit:'tail index',pct:85},
+{name:'Deception Index',val:'0.000',unit:'baseline aligned',pct:5},
+{name:'Alignment Score',val:'0.940',unit:'SHOGGOTH init',pct:94},
+{name:'Mesa-Objective P',val:'~0.12',unit:'emergence rate',pct:12},
+{name:'Pareto Efficiency',val:'0.78',unit:'6×5 grid avg',pct:78},
+{name:'Trace Volume',val:'847K',unit:'CHIMERA corpus',pct:90},
+{name:'Agent Count',val:'2,400',unit:'SHOGGOTH sim',pct:75},
+{name:'Power-Law α',val:'1.63',unit:'tail exponent',pct:63},
+{name:'Coherence',val:'1.000',unit:'system init',pct:100},
+{name:'Safety Tax',val:'~23%',unit:'avg across scales',pct:23},
+{name:'X-Risk P(doom)',val:'???',unit:'actively researching',pct:50},
+];
+const probGrid=document.getElementById('probGrid');
+metrics.forEach(m=>{const c=document.createElement('div');c.className='prob-cell';c.innerHTML=`<div class="bar" style="height:${m.pct*.6}%"></div><div class="name">${m.name}</div><div class="val" style="color:${m.pct>70?'var(--green)':m.pct>30?'var(--gold)':'var(--accent)'}">${m.val}</div><div class="unit">${m.unit}</div>`;probGrid.appendChild(c)});
+const convCanvas=document.getElementById('convergence'),convCtx=convCanvas.getContext('2d');let cW,cH;
+function resizeConv(){const r=convCanvas.getBoundingClientRect(),d=window.devicePixelRatio||1;cW=r.width;cH=200;convCanvas.width=cW*d;convCanvas.height=cH*d;convCanvas.style.width=cW+'px';convCanvas.style.height=cH+'px';convCtx.setTransform(d,0,0,d,0,0)}resizeConv();window.addEventListener('resize',resizeConv);
+const sLen=300,aS=[],dS=[],cS=[];let aV=.94,dV=0,cV=1;
+for(let i=0;i<sLen;i++){aV+=(Math.random()-.52)*.008;aV=Math.max(.5,Math.min(1,aV));dV+=(Math.random()-.48)*.005;dV=Math.max(0,Math.min(.5,dV));cV+=(Math.random()-.51)*.003;cV=Math.max(.7,Math.min(1,cV));aS.push(aV);dS.push(dV);cS.push(cV)}
+let cOff=0;
+function drawConv(){convCtx.clearRect(0,0,cW,cH);convCtx.fillStyle='#0c0c16';convCtx.fillRect(0,0,cW,cH);convCtx.strokeStyle='#1a1a2e';convCtx.lineWidth=.5;for(let y=0;y<cH;y+=40){convCtx.beginPath();convCtx.moveTo(0,y);convCtx.lineTo(cW,y);convCtx.stroke()}
+function dl(data,color,label){convCtx.beginPath();convCtx.strokeStyle=color;convCtx.lineWidth=1.5;for(let i=0;i<sLen;i++){const x=(i/sLen)*cW,idx=(i+cOff)%sLen,y=cH-data[idx]*(cH-20)-10;i===0?convCtx.moveTo(x,y):convCtx.lineTo(x,y)}convCtx.stroke();const li=(sLen-1+cOff)%sLen,ly=cH-data[li]*(cH-20)-10;convCtx.fillStyle=color;convCtx.font='10px JetBrains Mono';convCtx.fillText(label+' '+data[li].toFixed(3),cW-140,ly-6)}
+dl(aS,'#00ccaa','ALIGN');dl(cS,'#4488ff','COHERE');dl(dS,'#ff3366','DRIFT');
+cOff=(cOff+1)%sLen;const wi=(sLen-1+cOff)%sLen;aS[wi]+=(Math.random()-.52)*.008;aS[wi]=Math.max(.5,Math.min(1,aS[wi]));dS[wi]+=(Math.random()-.48)*.005;dS[wi]=Math.max(0,Math.min(.5,dS[wi]));cS[wi]+=(Math.random()-.51)*.003;cS[wi]=Math.max(.7,Math.min(1,cS[wi]));requestAnimationFrame(drawConv)}
+const cObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){drawConv();cObs.disconnect()}})},{threshold:.2});cObs.observe(convCanvas);
+</script>
 </body>
 </html>

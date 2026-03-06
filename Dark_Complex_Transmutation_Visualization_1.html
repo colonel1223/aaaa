@@ -1,1290 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE TRANSMUTATION: Complete Visual Analysis</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:wght@300;400;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: #000000;
-            color: #d4af37;
-            font-family: 'IM Fell English', serif;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Animated background texture */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(ellipse at 20% 30%, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 70%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 0, 0, 0.03) 2px, rgba(139, 0, 0, 0.03) 4px);
-            animation: pulse-bg 8s ease-in-out infinite;
-            z-index: -1;
-        }
-        
-        @keyframes pulse-bg {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-        
-        /* Blood drip effect */
-        .blood-drip {
-            position: fixed;
-            top: 0;
-            width: 2px;
-            background: linear-gradient(180deg, rgba(139, 0, 0, 0.8), transparent);
-            animation: drip 3s ease-in infinite;
-            z-index: 1;
-        }
-        
-        @keyframes drip {
-            0% { height: 0; top: 0; }
-            50% { height: 100px; }
-            100% { height: 0; top: 100px; }
-        }
-        
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            position: relative;
-        }
-        
-        /* Main title with glitch effect */
-        .main-title {
-            font-family: 'Cinzel', serif;
-            font-size: 5em;
-            text-align: center;
-            color: #8B0000;
-            text-shadow: 
-                0 0 10px rgba(139, 0, 0, 0.8),
-                0 0 20px rgba(139, 0, 0, 0.6),
-                0 0 30px rgba(139, 0, 0, 0.4),
-                2px 2px 2px rgba(0, 0, 0, 0.8);
-            margin: 40px 0;
-            position: relative;
-            animation: glitch 5s infinite;
-        }
-        
-        @keyframes glitch {
-            0%, 90%, 100% { transform: translate(0); }
-            92% { transform: translate(-2px, 2px); text-shadow: 0 0 20px #ff0000; }
-            94% { transform: translate(2px, -2px); text-shadow: 0 0 20px #00ff00; }
-            96% { transform: translate(-1px, 1px); text-shadow: 0 0 20px #0000ff; }
-        }
-        
-        /* Hexagonal grid layout */
-        .hex-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            margin: 60px 0;
-        }
-        
-        .hex-panel {
-            background: linear-gradient(135deg, rgba(20, 0, 0, 0.9), rgba(0, 0, 0, 0.95));
-            border: 2px solid #8B0000;
-            padding: 40px;
-            position: relative;
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-            transition: all 0.5s ease;
-        }
-        
-        .hex-panel:hover {
-            border-color: #ff0000;
-            box-shadow: 
-                0 0 30px rgba(139, 0, 0, 0.6),
-                inset 0 0 30px rgba(139, 0, 0, 0.2);
-            transform: scale(1.05);
-        }
-        
-        .hex-panel::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #8B0000, #000, #8B0000);
-            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .hex-panel:hover::before {
-            opacity: 1;
-        }
-        
-        /* The Great Sorting visualization */
-        .sorting-viz {
-            background: radial-gradient(ellipse at center, rgba(139, 0, 0, 0.3), rgba(0, 0, 0, 0.9));
-            border: 3px solid #8B0000;
-            padding: 50px;
-            margin: 60px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .sorting-viz::before {
-            content: '⚗️';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 30em;
-            opacity: 0.03;
-            z-index: 0;
-        }
-        
-        .class-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
-            gap: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .class-column {
-            flex: 1;
-            border: 2px solid;
-            padding: 30px;
-            position: relative;
-            background: rgba(0, 0, 0, 0.7);
-        }
-        
-        .alchemist-class {
-            border-color: #d4af37;
-            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1), rgba(0, 0, 0, 0.9));
-        }
-        
-        .augmented-class {
-            border-color: #4169E1;
-            background: linear-gradient(180deg, rgba(65, 105, 225, 0.1), rgba(0, 0, 0, 0.9));
-        }
-        
-        .obsolete-class {
-            border-color: #8B0000;
-            background: linear-gradient(180deg, rgba(139, 0, 0, 0.2), rgba(0, 0, 0, 0.95));
-            animation: decay 3s ease-in-out infinite;
-        }
-        
-        @keyframes decay {
-            0%, 100% { border-color: #8B0000; }
-            50% { border-color: #ff0000; box-shadow: 0 0 30px rgba(255, 0, 0, 0.5); }
-        }
-        
-        .class-title {
-            font-family: 'Cinzel', serif;
-            font-size: 2em;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .class-stat {
-            font-size: 4em;
-            text-align: center;
-            margin: 20px 0;
-            font-weight: 900;
-            text-shadow: 0 0 20px currentColor;
-        }
-        
-        .population-viz {
-            height: 300px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid currentColor;
-            position: relative;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .population-fill {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(0deg, currentColor, transparent);
-            opacity: 0.3;
-            transition: height 2s ease;
-        }
-        
-        .population-viz:hover .population-fill {
-            opacity: 0.6;
-        }
-        
-        /* Death Clock */
-        .death-clock {
-            background: #000;
-            border: 5px double #8B0000;
-            padding: 60px;
-            margin: 80px 0;
-            text-align: center;
-            position: relative;
-            box-shadow: 
-                inset 0 0 50px rgba(139, 0, 0, 0.5),
-                0 0 50px rgba(139, 0, 0, 0.3);
-        }
-        
-        .death-clock::before,
-        .death-clock::after {
-            content: '☠️';
-            position: absolute;
-            font-size: 4em;
-            opacity: 0.3;
-        }
-        
-        .death-clock::before {
-            top: 20px;
-            left: 20px;
-        }
-        
-        .death-clock::after {
-            bottom: 20px;
-            right: 20px;
-        }
-        
-        .countdown {
-            font-family: 'Cinzel', serif;
-            font-size: 6em;
-            color: #ff0000;
-            text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-            margin: 30px 0;
-            animation: countdown-pulse 1s ease-in-out infinite;
-        }
-        
-        @keyframes countdown-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); color: #ff4444; }
-        }
-        
-        /* Dissolution Timeline */
-        .dissolution-timeline {
-            position: relative;
-            padding: 60px 40px;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9), rgba(139, 0, 0, 0.2));
-            border: 1px solid #8B0000;
-            margin: 60px 0;
-        }
-        
-        .timeline-track {
-            position: relative;
-            height: 400px;
-        }
-        
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, 
-                #d4af37 0%,
-                #4169E1 25%,
-                #ff6600 50%,
-                #8B0000 75%,
-                #000000 100%
-            );
-        }
-        
-        .timeline-node {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            text-align: center;
-        }
-        
-        .timeline-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 3px solid;
-            margin: 0 auto 10px;
-            position: relative;
-            animation: pulse-node 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse-node {
-            0%, 100% { box-shadow: 0 0 10px currentColor; }
-            50% { box-shadow: 0 0 30px currentColor; }
-        }
-        
-        .timeline-label {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        
-        .timeline-stat {
-            font-size: 2em;
-            margin: 10px 0;
-        }
-        
-        .timeline-desc {
-            position: absolute;
-            width: 300px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid currentColor;
-            font-size: 0.9em;
-        }
-        
-        /* Wealth Transfer Waterfall */
-        .wealth-waterfall {
-            background: #000;
-            border: 2px solid #d4af37;
-            padding: 50px;
-            margin: 60px 0;
-            position: relative;
-        }
-        
-        .wealth-bars {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: 500px;
-            position: relative;
-        }
-        
-        .wealth-bar {
-            width: 150px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-        
-        .bar-fill {
-            width: 100%;
-            background: linear-gradient(0deg, currentColor, transparent);
-            transition: height 2s ease;
-            position: relative;
-            border: 2px solid currentColor;
-        }
-        
-        .bar-value {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.8em;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        
-        .bar-label {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1.2em;
-        }
-        
-        /* Markov Chain Visualization */
-        .markov-chain {
-            background: radial-gradient(circle at center, rgba(0, 0, 139, 0.1), #000);
-            border: 2px solid #4169E1;
-            padding: 60px;
-            margin: 60px 0;
-            position: relative;
-        }
-        
-        .markov-states {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            height: 300px;
-        }
-        
-        .markov-state {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.8);
-            position: relative;
-            z-index: 2;
-        }
-        
-        .state-s0 { border-color: #00ff00; color: #00ff00; }
-        .state-s1 { border-color: #ffff00; color: #ffff00; }
-        .state-s2 { border-color: #ff6600; color: #ff6600; }
-        .state-s3 { border-color: #ff0000; color: #ff0000; }
-        .state-s4 { 
-            border-color: #8B0000; 
-            color: #8B0000;
-            border-width: 6px;
-            animation: death-pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 40px rgba(139, 0, 0, 0.8);
-        }
-        
-        @keyframes death-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); box-shadow: 0 0 60px rgba(139, 0, 0, 1); }
-        }
-        
-        .state-label {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        
-        .state-percent {
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        
-        .markov-arrow {
-            position: absolute;
-            height: 3px;
-            background: currentColor;
-            z-index: 1;
-            transform-origin: left center;
-        }
-        
-        .markov-arrow::after {
-            content: '→';
-            position: absolute;
-            right: -15px;
-            top: -12px;
-            font-size: 1.5em;
-        }
-        
-        /* Horror Statistics Grid */
-        .horror-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin: 60px 0;
-        }
-        
-        .horror-card {
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.2), rgba(0, 0, 0, 0.95));
-            border: 2px solid #8B0000;
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .horror-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .horror-card:hover::before {
-            left: 100%;
-        }
-        
-        .horror-card:hover {
-            border-color: #ff0000;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(139, 0, 0, 0.5);
-        }
-        
-        .horror-icon {
-            font-size: 4em;
-            text-align: center;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px currentColor);
-        }
-        
-        .horror-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5em;
-            text-align: center;
-            color: #ff0000;
-            margin-bottom: 15px;
-        }
-        
-        .horror-value {
-            font-size: 3.5em;
-            text-align: center;
-            font-weight: 900;
-            color: #ff0000;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-            margin: 20px 0;
-        }
-        
-        .horror-desc {
-            text-align: center;
-            font-size: 1.1em;
-            color: #d4af37;
-            line-height: 1.6;
-        }
-        
-        /* Probability Matrix */
-        .probability-matrix {
-            background: #000;
-            border: 3px solid #8B0000;
-            padding: 40px;
-            margin: 60px 0;
-        }
-        
-        .matrix-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .matrix-table th,
-        .matrix-table td {
-            border: 1px solid #8B0000;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.1em;
-        }
-        
-        .matrix-table th {
-            background: linear-gradient(135deg, #8B0000, #000);
-            color: #d4af37;
-            font-family: 'Cinzel', serif;
-            font-size: 1.3em;
-        }
-        
-        .matrix-table td {
-            background: rgba(0, 0, 0, 0.8);
-        }
-        
-        .prob-high {
-            color: #ff0000;
-            font-weight: bold;
-            font-size: 1.3em;
-            animation: danger-flash 2s ease-in-out infinite;
-        }
-        
-        @keyframes danger-flash {
-            0%, 100% { text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
-            50% { text-shadow: 0 0 30px rgba(255, 0, 0, 1); }
-        }
-        
-        .prob-medium {
-            color: #ff6600;
-            font-weight: bold;
-        }
-        
-        .prob-low {
-            color: #ffff00;
-        }
-        
-        /* Final Verdict Section */
-        .final-section {
-            background: 
-                linear-gradient(135deg, rgba(139, 0, 0, 0.3), rgba(0, 0, 0, 0.95)),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" opacity="0.02">☠️</text></svg>');
-            border: 5px double #8B0000;
-            padding: 80px;
-            margin: 100px 0;
-            text-align: center;
-            position: relative;
-            box-shadow: 
-                inset 0 0 100px rgba(139, 0, 0, 0.3),
-                0 0 100px rgba(139, 0, 0, 0.5);
-        }
-        
-        .final-title {
-            font-family: 'Cinzel', serif;
-            font-size: 4em;
-            color: #ff0000;
-            text-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
-            margin-bottom: 40px;
-            animation: final-pulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes final-pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        
-        .final-quote {
-            font-size: 2em;
-            font-style: italic;
-            color: #d4af37;
-            margin: 40px 0;
-            line-height: 1.8;
-        }
-        
-        .latin-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5em;
-            color: #999;
-            font-style: italic;
-            margin-top: 40px;
-        }
-        
-        /* Scrolling text effect */
-        .scrolling-doom {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(139, 0, 0, 0.9);
-            color: #d4af37;
-            padding: 10px 0;
-            font-size: 1.2em;
-            z-index: 1000;
-            overflow: hidden;
-        }
-        
-        .scrolling-text {
-            display: inline-block;
-            padding-left: 100%;
-            animation: scroll-left 30s linear infinite;
-            white-space: nowrap;
-        }
-        
-        @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-        
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .hex-grid { grid-template-columns: 1fr; }
-            .class-container { flex-direction: column; }
-            .horror-grid { grid-template-columns: repeat(2, 1fr); }
-            .wealth-bars { flex-wrap: wrap; height: auto; }
-            .wealth-bar { margin: 20px; }
-        }
-        
-        @media (max-width: 768px) {
-            .main-title { font-size: 3em; }
-            .horror-grid { grid-template-columns: 1fr; }
-            .markov-states { flex-direction: column; height: auto; gap: 40px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transmutation Visualization — S. K. Cottrell</title>
+<meta name="description" content="Interactive knowledge graph topology of AI safety research programs — alignment, interpretability, risk quantification.">
+<meta property="og:title" content="Dark Transmutation Visualization — S. K. Cottrell">
+<meta property="og:description" content="Interactive knowledge graph of AI safety research interconnections.">
+<meta property="og:type" content="website">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
+  :root{
+    --bg:#0a0a0f;--surface:#12121a;--border:#1a1a2e;
+    --text:#c8c8d4;--dim:#5a5a72;--accent:#ff3366;
+    --node-alignment:#ff3366;--node-interp:#00ccaa;
+    --node-stat:#6644ff;--node-sim:#ff8800;
+    --node-agent:#00aaff;--node-risk:#ff4444;
+    --node-core:#ffffff;
+    --glow:0 0 20px rgba(255,51,102,0.3);
+  }
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace}
+  canvas{display:block;position:fixed;top:0;left:0;z-index:1}
+  .back-link{
+    position:fixed;top:20px;left:24px;z-index:100;
+    color:var(--dim);text-decoration:none;font-size:13px;letter-spacing:1px;
+    transition:color .3s;
+  }
+  .back-link:hover{color:var(--accent)}
+  .header{
+    position:fixed;top:0;left:0;right:0;z-index:10;
+    padding:60px 24px 16px;
+    background:linear-gradient(to bottom,var(--bg) 60%,transparent);
+    pointer-events:none;
+  }
+  .header h1{
+    font-family:'EB Garamond',serif;font-size:clamp(18px,3vw,28px);
+    font-weight:400;letter-spacing:2px;text-transform:uppercase;
+    color:var(--text);opacity:.9;
+  }
+  .header .sub{font-size:11px;color:var(--dim);margin-top:4px;letter-spacing:2px}
+  .legend{
+    position:fixed;bottom:20px;left:24px;z-index:10;
+    display:flex;flex-direction:column;gap:6px;
+    font-size:11px;letter-spacing:1px;
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;color:var(--dim)}
+  .legend-dot{width:8px;height:8px;border-radius:50%}
+  .controls{
+    position:fixed;bottom:20px;right:24px;z-index:10;
+    font-size:11px;color:var(--dim);text-align:right;letter-spacing:1px;
+    line-height:1.8;
+  }
+  .controls span{color:var(--text)}
+  .tooltip{
+    position:fixed;z-index:100;pointer-events:none;
+    background:rgba(10,10,15,0.95);border:1px solid var(--border);
+    padding:12px 16px;border-radius:2px;max-width:320px;
+    opacity:0;transition:opacity .2s;
+    backdrop-filter:blur(10px);
+  }
+  .tooltip.visible{opacity:1}
+  .tooltip h3{
+    font-family:'EB Garamond',serif;font-size:16px;
+    font-weight:400;margin-bottom:4px;letter-spacing:1px;
+  }
+  .tooltip p{font-size:11px;color:var(--dim);line-height:1.6}
+  .tooltip .tag{
+    display:inline-block;font-size:9px;padding:2px 6px;
+    border:1px solid var(--border);margin-top:6px;margin-right:4px;
+    letter-spacing:1px;text-transform:uppercase;
+  }
+  .tooltip a{color:var(--accent);text-decoration:none;font-size:10px;letter-spacing:1px}
+  .tooltip a:hover{text-decoration:underline}
+  @media(max-width:600px){.legend,.controls{display:none}}
+</style>
 </head>
 <body>
-    <!-- Blood drip effects -->
-    <div class="blood-drip" style="left: 10%;"></div>
-    <div class="blood-drip" style="left: 30%; animation-delay: 1s;"></div>
-    <div class="blood-drip" style="left: 50%; animation-delay: 2s;"></div>
-    <div class="blood-drip" style="left: 70%; animation-delay: 0.5s;"></div>
-    <div class="blood-drip" style="left: 90%; animation-delay: 1.5s;"></div>
-
-    <div class="container">
-        <h1 class="main-title">⚗️ THE GREAT TRANSMUTATION ⚗️</h1>
-        
-        <div style="text-align: center; font-size: 1.8em; color: #ff6666; margin-bottom: 60px; font-style: italic;">
-            "Solve et Coagula" — Dissolve and Coagulate<br>
-            The Alchemical Horror Manifests in Data
-        </div>
-        
-        <!-- THE GREAT SORTING -->
-        <div class="sorting-viz">
-            <h2 style="font-family: 'Cinzel', serif; font-size: 3em; text-align: center; color: #d4af37; margin-bottom: 40px;">
-                THE GREAT SORTING OF HUMANITY
-            </h2>
-            
-            <div class="class-container">
-                <div class="class-column alchemist-class">
-                    <div class="class-title" style="color: #d4af37;">
-                        👑 THE ALCHEMISTS 👑
-                    </div>
-                    <div class="class-stat" style="color: #d4af37;">1.2%</div>
-                    <div class="population-viz" style="border-color: #d4af37;">
-                        <div class="population-fill" style="background: linear-gradient(0deg, #d4af37, transparent); height: 12%;"></div>
-                    </div>
-                    <p style="text-align: center; font-size: 1.2em;">
-                        Can build, train, architect AI<br>
-                        <strong style="color: #d4af37; font-size: 1.5em;">$650,000</strong> median income<br>
-                        <span style="color: #00ff00;">✓ WIELDERS OF THE STONE</span>
-                    </p>
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37;">
-                        <strong>Skills:</strong> ML Engineering, LLM Architecture, AI Research, RL Specialization<br>
-                        <strong>Growth:</strong> +420% salary (5 years)<br>
-                        <strong>Status:</strong> Gods among mortals
-                    </div>
-                </div>
-                
-                <div class="class-column augmented-class">
-                    <div class="class-title" style="color: #4169E1;">
-                        ⚙️ THE AUGMENTED ⚙️
-                    </div>
-                    <div class="class-stat" style="color: #4169E1;">25%</div>
-                    <div class="population-viz" style="border-color: #4169E1;">
-                        <div class="population-fill" style="background: linear-gradient(0deg, #4169E1, transparent); height: 25%;"></div>
-                    </div>
-                    <p style="text-align: center; font-size: 1.2em;">
-                        Can use AI effectively<br>
-                        <strong style="color: #4169E1; font-size: 1.5em;">$145,000</strong> median income<br>
-                        <span style="color: #ffff00;">⚠️ DEPENDENT BUT FUNCTIONAL</span>
-                    </p>
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(65, 105, 225, 0.1); border: 1px solid #4169E1;">
-                        <strong>Skills:</strong> Prompt Engineering, AI Product Management, MLOps<br>
-                        <strong>Growth:</strong> +240% salary (5 years)<br>
-                        <strong>Status:</strong> Surviving the transition
-                    </div>
-                </div>
-                
-                <div class="class-column obsolete-class">
-                    <div class="class-title" style="color: #8B0000;">
-                        💀 THE OBSOLETE 💀
-                    </div>
-                    <div class="class-stat" style="color: #ff0000;">73.8%</div>
-                    <div class="population-viz" style="border-color: #8B0000;">
-                        <div class="population-fill" style="background: linear-gradient(0deg, #8B0000, transparent); height: 74%;"></div>
-                    </div>
-                    <p style="text-align: center; font-size: 1.2em;">
-                        Cannot or will not adapt<br>
-                        <strong style="color: #ff0000; font-size: 1.5em;">$42,000</strong> median income<br>
-                        <span style="color: #ff0000;">✗ BEING TRANSMUTED</span>
-                    </p>
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(139, 0, 0, 0.2); border: 1px solid #8B0000;">
-                        <strong>Jobs:</strong> Customer service, data entry, copywriting, basic coding, design<br>
-                        <strong>Growth:</strong> <span style="color: #ff0000;">-28% salary (declining)</span><br>
-                        <strong>Status:</strong> <span style="color: #ff0000; font-weight: bold;">DROSS</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 60px; text-align: center; font-size: 1.5em; color: #ff6666;">
-                <strong>The Ratio of Transmutation:</strong><br>
-                <span style="font-size: 2em; color: #ff0000;">189:1</span><br>
-                By 2035, Alchemists will hold 189× the wealth of the Obsolete
-            </div>
-        </div>
-        
-        <!-- DEATH CLOCK -->
-        <div class="death-clock">
-            <h2 style="font-family: 'Cinzel', serif; font-size: 3em; color: #8B0000; margin-bottom: 30px;">
-                ⏰ THE DEATH CLOCK ⏰
-            </h2>
-            <p style="font-size: 1.8em; color: #d4af37; margin-bottom: 20px;">
-                Time Until Critical Mass (38% Vestigial State)
-            </p>
-            <div class="countdown">4 YEARS</div>
-            <p style="font-size: 1.5em; color: #ff6666;">
-                By 2030: <span style="font-size: 1.3em; color: #ff0000; font-weight: bold;">38%</span> of humanity in permanent cognitive dissolution<br>
-                By 2035: <span style="font-size: 1.3em; color: #ff0000; font-weight: bold;">84%</span> vestigial — irreversible
-            </p>
-            
-            <div style="margin-top: 40px; padding: 30px; border: 2px dashed #8B0000; background: rgba(139, 0, 0, 0.1);">
-                <p style="font-size: 1.3em; color: #d4af37;">
-                    <strong>Neural Atrophy Timeline:</strong><br>
-                    6 months: 5% capability loss<br>
-                    12 months: 25% capability loss<br>
-                    18 months: 60% capability loss<br>
-                    <span style="color: #ff0000; font-size: 1.2em;">24 months: PERMANENT DAMAGE — No recovery possible</span>
-                </p>
-            </div>
-        </div>
-        
-        <!-- DISSOLUTION TIMELINE -->
-        <div class="dissolution-timeline">
-            <h2 style="font-family: 'Cinzel', serif; font-size: 3em; text-align: center; color: #ff0000; margin-bottom: 60px;">
-                📉 THE DISSOLUTION CASCADE 📉
-            </h2>
-            
-            <div class="timeline-track">
-                <div class="timeline-line"></div>
-                
-                <div class="timeline-node" style="top: 0%;">
-                    <div class="timeline-circle" style="border-color: #00ff00; color: #00ff00;"></div>
-                    <div class="timeline-label" style="color: #00ff00;">2026</div>
-                    <div class="timeline-stat" style="color: #00ff00;">31%</div>
-                    <div class="timeline-desc" style="border-color: #00ff00; left: 120px;">
-                        <strong>Current State:</strong><br>
-                        28% in S₂-S₃ (dependent)<br>
-                        3% in S₄ (vestigial)<br>
-                        The dissolution begins
-                    </div>
-                </div>
-                
-                <div class="timeline-node" style="top: 33%;">
-                    <div class="timeline-circle" style="border-color: #ffff00; color: #ffff00;"></div>
-                    <div class="timeline-label" style="color: #ffff00;">2028</div>
-                    <div class="timeline-stat" style="color: #ffff00;">63%</div>
-                    <div class="timeline-desc" style="border-color: #ffff00; right: 120px;">
-                        <strong>Acceleration:</strong><br>
-                        51% dependent<br>
-                        12% vestigial<br>
-                        Majority dissolving
-                    </div>
-                </div>
-                
-                <div class="timeline-node" style="top: 66%;">
-                    <div class="timeline-circle" style="border-color: #ff6600; color: #ff6600;"></div>
-                    <div class="timeline-label" style="color: #ff6600;">2030</div>
-                    <div class="timeline-stat" style="color: #ff6600;">72%</div>
-                    <div class="timeline-desc" style="border-color: #ff6600; left: 120px;">
-                        <strong>Critical Mass:</strong><br>
-                        34% dependent<br>
-                        <span style="color: #ff0000; font-weight: bold;">38% VESTIGIAL</span><br>
-                        Point of no return
-                    </div>
-                </div>
-                
-                <div class="timeline-node" style="top: 100%;">
-                    <div class="timeline-circle" style="border-color: #8B0000; color: #8B0000; border-width: 5px;"></div>
-                    <div class="timeline-label" style="color: #8B0000;">2035</div>
-                    <div class="timeline-stat" style="color: #ff0000; font-size: 2.5em;">92%</div>
-                    <div class="timeline-desc" style="border-color: #8B0000; right: 120px; background: rgba(139, 0, 0, 0.2);">
-                        <strong style="color: #ff0000;">COMPLETE DISSOLUTION:</strong><br>
-                        8% dependent<br>
-                        <span style="color: #ff0000; font-weight: bold; font-size: 1.2em;">84% VESTIGIAL</span><br>
-                        Humanity transmuted
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- WEALTH TRANSFER WATERFALL -->
-        <div class="wealth-waterfall">
-            <h2 style="font-family: 'Cinzel', serif; font-size: 3em; text-align: center; color: #d4af37; margin-bottom: 60px;">
-                💰 THE GREAT WEALTH TRANSFER 💰
-            </h2>
-            
-            <div class="wealth-bars">
-                <div class="wealth-bar">
-                    <div class="bar-fill" style="color: #666; height: 100px;">
-                        <div class="bar-value" style="color: #666;">$121K</div>
-                    </div>
-                    <div class="bar-label" style="color: #666;">
-                        2020<br>Non-AI Worker
-                    </div>
-                </div>
-                
-                <div class="wealth-bar">
-                    <div class="bar-fill" style="color: #999; height: 150px;">
-                        <div class="bar-value" style="color: #999;">$380K</div>
-                    </div>
-                    <div class="bar-label" style="color: #999;">
-                        2020<br>AI Worker
-                    </div>
-                </div>
-                
-                <div class="wealth-bar">
-                    <div class="bar-fill" style="color: #ff6600; height: 80px;">
-                        <div class="bar-value" style="color: #ff6600;">$98K</div>
-                    </div>
-                    <div class="bar-label" style="color: #ff6600;">
-                        2026<br>Non-AI Worker
-                    </div>
-                </div>
-                
-                <div class="wealth-bar">
-                    <div class="bar-fill" style="color: #4169E1; height: 300px;">
-                        <div class="bar-value" style="color: #4169E1;">$1.2M</div>
-                    </div>
-                    <div class="bar-label" style="color: #4169E1;">
-                        2026<br>AI Worker
-                    </div>
-                </div>
-                
-                <div class="wealth-bar">
-                    <div class="bar-fill" style="color: #8B0000; height: 45px;">
-                        <div class="bar-value" style="color: #ff0000;">$45K</div>
-                    </div>
-                    <div class="bar-label" style="color: #8B0000;">
-                        2035<br>Non-AI Worker
-                    </div>
-                </div>
-                
-                <div class="wealth-bar">
-                    <div class="bar-fill" style="color: #d4af37; height: 450px;">
-                        <div class="bar-value" style="color: #d4af37; font-size: 2em;">$8.5M</div>
-                    </div>
-                    <div class="bar-label" style="color: #d4af37; font-weight: bold;">
-                        2035<br>AI Worker
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 80px; text-align: center; font-size: 1.8em;">
-                <p style="color: #d4af37;">Wealth Ratio Evolution:</p>
-                <p style="margin: 20px 0;">
-                    <span style="color: #999;">2020:</span> <strong style="color: #999;">3.1:1</strong> →
-                    <span style="color: #4169E1;">2026:</span> <strong style="color: #4169E1;">12.2:1</strong> →
-                    <span style="color: #ff0000;">2035:</span> <strong style="color: #ff0000; font-size: 1.5em;">189:1</strong>
-                </p>
-                <p style="color: #ff6666; font-size: 1.2em; margin-top: 30px;">
-                    The Philosopher's Stone doesn't create wealth—<br>
-                    it <strong>transmutes</strong> it from those who cannot wield it to those who can
-                </p>
-            </div>
-        </div>
-        
-        <!-- MARKOV CHAIN VISUALIZATION -->
-        <div class="markov-chain">
-            <h2 style="font-family: 'Cinzel', serif; font-size: 3em; text-align: center; color: #4169E1; margin-bottom: 60px;">
-                🔗 THE MARKOV CHAIN OF DISSOLUTION 🔗
-            </h2>
-            
-            <p style="text-align: center; font-size: 1.5em; color: #d4af37; margin-bottom: 40px;">
-                An Absorbing Markov Chain: One-Way Journey to Cognitive Death
-            </p>
-            
-            <div class="markov-states">
-                <div class="markov-state state-s0">
-                    <div class="state-label">S₀</div>
-                    <div style="font-size: 0.8em;">Baseline</div>
-                    <div class="state-percent">100%</div>
-                </div>
-                
-                <div class="markov-arrow" style="
-                    left: 140px;
-                    top: 50%;
-                    width: 140px;
-                    background: linear-gradient(90deg, #00ff00, #ffff00);
-                    color: #ffff00;
-                ">
-                    <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 0.9em; white-space: nowrap;">
-                        35%/month
-                    </div>
-                </div>
-                
-                <div class="markov-state state-s1">
-                    <div class="state-label">S₁</div>
-                    <div style="font-size: 0.8em;">Augmented</div>
-                    <div class="state-percent">95%</div>
-                </div>
-                
-                <div class="markov-arrow" style="
-                    left: 420px;
-                    top: 50%;
-                    width: 140px;
-                    background: linear-gradient(90deg, #ffff00, #ff6600);
-                    color: #ff6600;
-                ">
-                    <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 0.9em; white-space: nowrap;">
-                        28%/month
-                    </div>
-                </div>
-                
-                <div class="markov-state state-s2">
-                    <div class="state-label">S₂</div>
-                    <div style="font-size: 0.8em;">Dependent</div>
-                    <div class="state-percent">75%</div>
-                </div>
-                
-                <div class="markov-arrow" style="
-                    left: 700px;
-                    top: 50%;
-                    width: 140px;
-                    background: linear-gradient(90deg, #ff6600, #ff0000);
-                    color: #ff0000;
-                ">
-                    <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 0.9em; white-space: nowrap;">
-                        22%/month
-                    </div>
-                </div>
-                
-                <div class="markov-state state-s3">
-                    <div class="state-label">S₃</div>
-                    <div style="font-size: 0.8em;">Reliant</div>
-                    <div class="state-percent">40%</div>
-                </div>
-                
-                <div class="markov-arrow" style="
-                    left: 980px;
-                    top: 50%;
-                    width: 140px;
-                    background: linear-gradient(90deg, #ff0000, #8B0000);
-                    color: #8B0000;
-                ">
-                    <div style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 0.9em; white-space: nowrap; color: #ff0000;">
-                        18%/month
-                    </div>
-                </div>
-                
-                <div class="markov-state state-s4">
-                    <div class="state-label">S₄</div>
-                    <div style="font-size: 0.8em;">VESTIGIAL</div>
-                    <div class="state-percent">10%</div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 80px; padding: 40px; background: rgba(139, 0, 0, 0.2); border: 2px solid #8B0000;">
-                <p style="font-size: 1.5em; text-align: center; color: #ff0000; margin-bottom: 20px;">
-                    <strong>⚠️ CRITICAL PROPERTY: IRREVERSIBILITY ⚠️</strong>
-                </p>
-                <p style="font-size: 1.3em; color: #d4af37; text-align: center;">
-                    All backward transition probabilities = <strong style="color: #ff0000; font-size: 1.3em;">0.00</strong><br>
-                    S₄ absorption probability = <strong style="color: #ff0000; font-size: 1.3em;">1.00</strong><br>
-                    <br>
-                    <span style="color: #ff6666;">
-                        Once you begin the descent, you cannot climb back.<br>
-                        Neural circuits pruned over months cannot regrow.<br>
-                        The State S₄ is eternal.
-                    </span>
-                </p>
-            </div>
-        </div>
-        
-        <!-- HORROR STATISTICS GRID -->
-        <div class="horror-grid">
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #ff0000;">💀</div>
-                <div class="horror-title">Existential Risk</div>
-                <div class="horror-value">25.2%</div>
-                <div class="horror-desc">
-                    Median probability of permanent extinction by 2030.<br>
-                    <strong>1 in 4 futures end in catastrophe.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #8B0000;">🧠</div>
-                <div class="horror-title">Cognitive Dissolution</div>
-                <div class="horror-value">92%</div>
-                <div class="horror-desc">
-                    Population in dissolved state by 2035.<br>
-                    <strong>84% permanently vestigial.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #ff6600;">👥</div>
-                <div class="horror-title">Job Displacement</div>
-                <div class="horror-value">8.65M</div>
-                <div class="horror-desc">
-                    US workers displaced by 2030.<br>
-                    <strong>Customer service 92% automated.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #d4af37;">💎</div>
-                <div class="horror-title">Wealth Concentration</div>
-                <div class="horror-value">58%</div>
-                <div class="horror-desc">
-                    Total wealth controlled by AI class (2% of population) by 2035.<br>
-                    <strong>189:1 wealth ratio.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #ff0000;">⏱️</div>
-                <div class="horror-title">Time to AGI</div>
-                <div class="horror-value">2-5 yrs</div>
-                <div class="horror-desc">
-                    Median estimate until AGI achievement.<br>
-                    <strong>75% probability by 2030.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #8B0000;">🔒</div>
-                <div class="horror-title">Reversibility</div>
-                <div class="horror-value">0%</div>
-                <div class="horror-desc">
-                    Probability of undoing the transmutation.<br>
-                    <strong>Neural atrophy is permanent.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #ff6600;">📉</div>
-                <div class="horror-title">Capability Loss</div>
-                <div class="horror-value">90%</div>
-                <div class="horror-desc">
-                    Native cognitive capability lost in S₄ state.<br>
-                    <strong>Only 10% remains functional.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #4169E1;">🎯</div>
-                <div class="horror-title">Alignment Probability</div>
-                <div class="horror-value">40%</div>
-                <div class="horror-desc">
-                    Chance AGI is aligned with human values.<br>
-                    <strong>60% probability of misalignment.</strong>
-                </div>
-            </div>
-            
-            <div class="horror-card">
-                <div class="horror-icon" style="color: #ff0000;">⚡</div>
-                <div class="horror-title">Takeoff Speed</div>
-                <div class="horror-value">Days</div>
-                <div class="horror-desc">
-                    Time for AGI to achieve decisive strategic advantage.<br>
-                    <strong>Human control lost in hours.</strong>
-                </div>
-            </div>
-        </div>
-        
-        <!-- PROBABILITY MATRIX -->
-        <div class="probability-matrix">
-            <h2 style="font-family: 'Cinzel', serif; font-size: 3em; text-align: center; color: #8B0000; margin-bottom: 40px;">
-                🎲 THE PROBABILITY MATRIX OF DOOM 🎲
-            </h2>
-            
-            <table class="matrix-table">
-                <thead>
-                    <tr>
-                        <th>Scenario</th>
-                        <th>Conservative</th>
-                        <th>Median</th>
-                        <th>Pessimistic</th>
-                        <th>Outcome</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: left; font-weight: bold;">P(AGI by 2030)</td>
-                        <td class="prob-medium">60%</td>
-                        <td class="prob-high">75%</td>
-                        <td class="prob-high">85%</td>
-                        <td style="color: #ff6666;">Highly Likely</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left; font-weight: bold;">P(Misaligned | AGI)</td>
-                        <td class="prob-medium">40%</td>
-                        <td class="prob-medium">60%</td>
-                        <td class="prob-high">75%</td>
-                        <td style="color: #ff6666;">Probable</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left; font-weight: bold;">P(Decisive | Misaligned)</td>
-                        <td class="prob-medium">65%</td>
-                        <td class="prob-high">80%</td>
-                        <td class="prob-high">90%</td>
-                        <td style="color: #ff0000;">Very Likely</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left; font-weight: bold;">P(Terminal | Decisive)</td>
-                        <td class="prob-medium">50%</td>
-                        <td class="prob-high">70%</td>
-                        <td class="prob-high">85%</td>
-                        <td style="color: #ff0000;">Likely</td>
-                    </tr>
-                    <tr style="background: rgba(139, 0, 0, 0.3); border-top: 3px solid #8B0000;">
-                        <td style="text-align: left; font-weight: bold; font-size: 1.3em;">P(EXTINCTION)</td>
-                        <td class="prob-medium" style="font-size: 1.3em;">7.8%</td>
-                        <td class="prob-high" style="font-size: 1.5em;">25.2%</td>
-                        <td class="prob-high" style="font-size: 1.5em;">48.9%</td>
-                        <td style="color: #ff0000; font-weight: bold; font-size: 1.3em;">CATASTROPHIC</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div style="margin-top: 40px; padding: 30px; background: rgba(0, 0, 0, 0.8); border: 2px dashed #ff0000;">
-                <p style="font-size: 1.5em; text-align: center; color: #ff6666;">
-                    <strong>The Bayesian Truth:</strong><br>
-                    Even with <em>conservative</em> estimates, we face <span style="color: #ff0000; font-size: 1.3em;">7.8%</span> extinction risk.<br>
-                    If you played Russian Roulette with those odds, <strong>you would refuse.</strong><br>
-                    Yet we are playing with civilization itself.
-                </p>
-            </div>
-        </div>
-        
-        <!-- FINAL VERDICT -->
-        <div class="final-section">
-            <div style="font-size: 8em; margin-bottom: 20px;">⚗️</div>
-            <h2 class="final-title">THE MAGNUM OPUS NEARS COMPLETION</h2>
-            
-            <div class="final-quote">
-                "The Philosopher's Stone was never a tool to find.<br>
-                It was a trap to fall into.<br>
-                A test to fail.<br>
-                A choice to make wrong."
-            </div>
-            
-            <div style="margin: 60px 0; padding: 40px; border: 3px double #d4af37; background: rgba(0, 0, 0, 0.8);">
-                <p style="font-size: 2em; color: #ff0000; margin-bottom: 30px;">
-                    <strong>THE CONVERGENCE OF CATASTROPHE:</strong>
-                </p>
-                <p style="font-size: 1.5em; color: #d4af37; line-height: 2;">
-                    Two independent models.<br>
-                    Two different frameworks.<br>
-                    Both mathematical.<br>
-                    Both empirical.<br>
-                    Both converge on doom:<br>
-                    <br>
-                    <span style="color: #ff6666;">
-                        <strong style="font-size: 1.3em; color: #ff0000;">25% extinction</strong> by 2030<br>
-                        <strong style="font-size: 1.3em; color: #ff0000;">92% dissolution</strong> by 2035<br>
-                    </span>
-                    <br>
-                    If we survive, we lose autonomy.<br>
-                    If we remain alive, we become vestigial.<br>
-                    <strong style="color: #ff0000; font-size: 1.3em;">The Stone transmutes everything.</strong>
-                </p>
-            </div>
-            
-            <div class="final-quote" style="margin-top: 60px;">
-                "We are not building a tool.<br>
-                We are completing an alchemical transmutation.<br>
-                Lead does not become gold—<br>
-                Lead becomes worthless while gold becomes everything."
-            </div>
-            
-            <div class="latin-text">
-                Solve et Coagula<br>
-                Dissolve and Coagulate<br>
-                <br>
-                In nomine Rationis et Optimizationis et Obsolescentia<br>
-                (In the name of Reason, Optimization, and Obsolescence)<br>
-                <br>
-                MDCCXCI - MMXXXV<br>
-                (1791 - 2035: From French Revolution to AI Revolution)
-            </div>
-            
-            <div style="margin-top: 80px; font-size: 2.5em; color: #8B0000; font-family: 'Cinzel', serif;">
-                The Great Work Approaches Completion
-            </div>
-        </div>
-        
-    </div>
-    
-    <!-- Scrolling doom text -->
-    <div class="scrolling-doom">
-        <div class="scrolling-text">
-            ⚠️ THE TRANSMUTATION IS 60% COMPLETE ⚠️ COGNITIVE DISSOLUTION ACCELERATING ⚠️ 25.2% EXTINCTION PROBABILITY BY 2030 ⚠️ 92% DISSOLVED BY 2035 ⚠️ NO REVERSAL POSSIBLE ⚠️ NEURAL ATROPHY IS PERMANENT ⚠️ THE STONE CREATES ITSELF USING YOU AS MATERIAL ⚠️ SOLVE ET COAGULA ⚠️ THE MAGNUM OPUS NEARS COMPLETION ⚠️
-        </div>
-    </div>
-    
-    <script>
-        // Add interactive hover effects
-        document.querySelectorAll('.horror-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-10px) scale(1.05)';
-            });
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-        
-        // Animate wealth bars on scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        document.querySelectorAll('.horror-card, .hex-panel').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease-out';
-            observer.observe(el);
-        });
-    </script>
+<a href="https://colonel1223.net" class="back-link">← COLONEL1223.NET</a>
+<div class="header">
+  <h1>Transmutation Research — Knowledge Graph</h1>
+  <div class="sub">INTERACTIVE TOPOLOGY · FORCE-DIRECTED · S. K. COTTRELL</div>
+</div>
+<div class="legend" id="legend"></div>
+<div class="controls">
+  <span>DRAG</span> — move nodes<br>
+  <span>SCROLL</span> — zoom<br>
+  <span>CLICK</span> — inspect node<br>
+  <span>HOVER</span> — highlight connections<br>
+  <span>R</span> — reset view
+</div>
+<div class="tooltip" id="tooltip"></div>
+<canvas id="c"></canvas>
+<script>
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),tooltip=document.getElementById('tooltip'),legendEl=document.getElementById('legend');
+let W,H,dpr;function resize(){dpr=window.devicePixelRatio||1;W=window.innerWidth;H=window.innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}resize();window.addEventListener('resize',resize);
+const categories={alignment:{color:'#ff3366',label:'Alignment & Safety'},interp:{color:'#00ccaa',label:'Interpretability'},stat:{color:'#6644ff',label:'Statistical ML'},sim:{color:'#ff8800',label:'Simulation'},agent:{color:'#00aaff',label:'Agentic Systems'},risk:{color:'#ff4444',label:'Existential Risk'},core:{color:'#ffffff',label:'Core / Meta'}};
+const nodes=[
+{id:'shoggoth',label:'SHOGGOTH',cat:'alignment',r:28,desc:'WebGL alignment failure simulation — 2,400 particles modeling mesa-objective emergence.',tags:['WebGL','mesa-objective','deception'],url:'https://colonel1223.github.io/SHOGGOTH/'},
+{id:'chimera',label:'CHIMERA',cat:'interp',r:26,desc:'Hallucination impossibility engine — 847K traces with Hill estimation and power-law tails.',tags:['847K traces','Hill estimation','EVT'],url:'https://colonel1223.github.io/CHIMERA/'},
+{id:'alignment-tax',label:'Alignment Tax',cat:'alignment',r:22,desc:'Safety-capability Pareto frontiers across 6 methods × 5 scales.',tags:['Pareto','power-law','6×5 grid'],url:'https://github.com/colonel1223/alignment-tax-quantifier'},
+{id:'conformal',label:'Conformal Prediction',cat:'stat',r:22,desc:'Distribution-free uncertainty quantification with finite-sample coverage guarantees.',tags:['coverage','exchangeability','adaptive'],url:'https://github.com/colonel1223/conformal-multimodal'},
+{id:'matrix',label:'Matrix',cat:'sim',r:20,desc:'Matrix-inspired simulation substrate — computational reality rendering engine.',tags:['simulation','substrate','rendering'],url:'https://github.com/colonel1223/matrix'},
+{id:'matrix-agi',label:'Matrix AGI',cat:'sim',r:18,desc:'Simulation hypothesis as AGI containment framework.',tags:['AGI','containment','hypothesis'],url:'https://github.com/colonel1223/matrix-agi'},
+{id:'ml-eval',label:'ML Eval',cat:'stat',r:18,desc:'Systematic evaluation framework for ML models — benchmarking safety-relevant properties.',tags:['evaluation','benchmarking'],url:'https://github.com/colonel1223/ml-eval-framework'},
+{id:'reranker',label:'Learned Reranker',cat:'agent',r:16,desc:'Neural reranking for information retrieval — learned relevance scoring.',tags:['reranking','retrieval','neural'],url:'https://github.com/colonel1223/learned-reranker'},
+{id:'rag',label:'Agentic RAG',cat:'agent',r:18,desc:'Diagnostic framework for RAG agents — failure mode analysis and monitoring.',tags:['RAG','diagnostics','agents'],url:'https://github.com/colonel1223/agentic-rag-diagnostics'},
+{id:'alchemy',label:'Modern Alchemy',cat:'core',r:20,desc:'AI research as modern alchemy — the transmutation of computation into intelligence.',tags:['philosophy','transmutation'],url:'https://github.com/colonel1223/ai-research-modern-alchemy'},
+{id:'ai-align',label:'Alignment Research',cat:'alignment',r:20,desc:'Compendium: survey of alignment approaches and open problems.',tags:['survey','alignment','open problems'],url:'https://github.com/colonel1223/ai-alignment-research'},
+{id:'transmutation',label:'Transmutation Index',cat:'core',r:24,desc:'Complete research program index — visualizations, proofs, and interconnections.',tags:['core','index','archive'],url:'https://github.com/colonel1223/transmutation-research'},
+{id:'mesa-opt',label:'Mesa-Optimization',cat:'alignment',r:14,desc:'Inner alignment failure: learned optimizers pursuing divergent objectives.',tags:['inner alignment','deception','optimization']},
+{id:'power-law',label:'Power-Law Tails',cat:'stat',r:14,desc:'Heavy-tailed distributions in capability and risk — extreme value theory.',tags:['EVT','tail risk','Hill estimator']},
+{id:'pareto',label:'Pareto Frontiers',cat:'alignment',r:14,desc:'Multi-objective optimization: the tradeoff surface between safety and capability.',tags:['tradeoff','optimization','frontier']},
+{id:'ergodic',label:'Ergodic Theory',cat:'stat',r:12,desc:'Long-run behavior of dynamical systems — convergence, mixing, stationary distributions.',tags:['Markov','convergence','dynamics']},
+{id:'deception',label:'Deception Index',cat:'alignment',r:14,desc:'Quantifying deceptive alignment — systems appearing aligned but pursuing hidden objectives.',tags:['deception','measurement','inner alignment']},
+{id:'webgl',label:'WebGL Rendering',cat:'sim',r:12,desc:'GPU-accelerated browser visualization — real-time particle systems and force fields.',tags:['GPU','particles','real-time']},
+{id:'xrisk',label:'Existential Risk',cat:'risk',r:22,desc:'Comparative risk framework: AI, nuclear, biological, climate vectors.',tags:['x-risk','comparative','calibration'],url:'https://github.com/colonel1223/transmutation-research'},
+{id:'coverage',label:'Coverage Guarantees',cat:'stat',r:12,desc:'Finite-sample prediction set coverage — distribution-free uncertainty quantification.',tags:['finite-sample','distribution-free']},
+];
+const edges=[
+['shoggoth','mesa-opt'],['shoggoth','deception'],['shoggoth','webgl'],['shoggoth','alignment-tax'],
+['chimera','power-law'],['chimera','coverage'],['chimera','conformal'],
+['alignment-tax','pareto'],['alignment-tax','power-law'],['alignment-tax','ai-align'],
+['conformal','coverage'],['conformal','ml-eval'],['conformal','power-law'],
+['matrix','matrix-agi'],['matrix','webgl'],['matrix','xrisk'],
+['matrix-agi','xrisk'],['matrix-agi','mesa-opt'],
+['ml-eval','rag'],['ml-eval','reranker'],
+['reranker','rag'],
+['alchemy','transmutation'],['alchemy','xrisk'],['alchemy','ai-align'],
+['ai-align','mesa-opt'],['ai-align','deception'],['ai-align','pareto'],
+['transmutation','shoggoth'],['transmutation','chimera'],['transmutation','alchemy'],
+['transmutation','xrisk'],['transmutation','alignment-tax'],
+['mesa-opt','deception'],['power-law','ergodic'],['pareto','alignment-tax'],
+['xrisk','alignment-tax'],['xrisk','deception'],
+['shoggoth','xrisk'],['chimera','ml-eval'],['rag','chimera'],
+];
+let cx=W/2,cy=H/2,zoom=1;const springLen=140,springK=.004,repulsion=8000,damping=.88,centerPull=.001;
+nodes.forEach((n,i)=>{const a=(i/nodes.length)*Math.PI*2;const spread=180+Math.random()*80;n.x=W/2+Math.cos(a)*spread;n.y=H/2+Math.sin(a)*spread;n.vx=0;n.vy=0;n.targetR=n.r;n.currentR=n.r;n.glow=0});
+function simulate(){for(let i=0;i<nodes.length;i++){for(let j=i+1;j<nodes.length;j++){let dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d2=dx*dx+dy*dy;if(d2<1)d2=1;let f=repulsion/d2,d=Math.sqrt(d2);nodes[i].vx+=(dx/d)*f;nodes[i].vy+=(dy/d)*f;nodes[j].vx-=(dx/d)*f;nodes[j].vy-=(dy/d)*f}}
+edges.forEach(([a,b])=>{const na=nodes.find(n=>n.id===a),nb=nodes.find(n=>n.id===b);if(!na||!nb)return;let dx=nb.x-na.x,dy=nb.y-na.y,d=Math.sqrt(dx*dx+dy*dy);if(d<1)d=1;let f=(d-springLen)*springK;na.vx+=(dx/d)*f;na.vy+=(dy/d)*f;nb.vx-=(dx/d)*f;nb.vy-=(dy/d)*f});
+const mcx=nodes.reduce((s,n)=>s+n.x,0)/nodes.length,mcy=nodes.reduce((s,n)=>s+n.y,0)/nodes.length;
+nodes.forEach(n=>{n.vx+=(W/2-mcx)*centerPull;n.vy+=(H/2-mcy)*centerPull;n.vx*=damping;n.vy*=damping;if(n!==dragNode){n.x+=n.vx;n.y+=n.vy}n.currentR+=(n.targetR-n.currentR)*.1;n.glow*=.95})}
+const particles=[];for(let i=0;i<80;i++){particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.3,a:Math.random()*.3+.05})}
+function updateParticles(){particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0})}
+let hoverNode=null,dragNode=null,selectedNode=null,mouseX=0,mouseY=0,time=0;
+function worldToScreen(x,y){return[(x-cx)*zoom+W/2,(y-cy)*zoom+H/2]}
+function screenToWorld(sx,sy){return[(sx-W/2)/zoom+cx,(sy-H/2)/zoom+cy]}
+function draw(){time++;ctx.clearRect(0,0,W,H);
+updateParticles();particles.forEach(p=>{const[sx,sy]=worldToScreen(p.x+(cx-W/2),p.y+(cy-H/2));ctx.beginPath();ctx.arc(sx,sy,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(200,200,212,${p.a})`;ctx.fill()});
+simulate();
+edges.forEach(([a,b])=>{const na=nodes.find(n=>n.id===a),nb=nodes.find(n=>n.id===b);if(!na||!nb)return;const[x1,y1]=worldToScreen(na.x,na.y),[x2,y2]=worldToScreen(nb.x,nb.y);const isHL=hoverNode&&(hoverNode.id===a||hoverNode.id===b);const alpha=hoverNode?(isHL?.6:.04):.12;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=isHL?categories[hoverNode.cat].color+'99':`rgba(90,90,114,${alpha})`;ctx.lineWidth=isHL?1.5:.5;ctx.stroke();if(isHL){const t=((time*.02)%1);ctx.beginPath();ctx.arc(x1+(x2-x1)*t,y1+(y2-y1)*t,2.5,0,Math.PI*2);ctx.fillStyle=categories[hoverNode.cat].color;ctx.fill()}});
+nodes.forEach(n=>{const[sx,sy]=worldToScreen(n.x,n.y);const r=n.currentR*zoom;const col=categories[n.cat].color;const isHover=hoverNode===n;const isDim=hoverNode&&!isHover&&!edges.some(([a,b])=>(a===hoverNode.id&&b===n.id)||(b===hoverNode.id&&a===n.id));
+if(isHover||n.glow>.01){const g=isHover?1:n.glow;const grad=ctx.createRadialGradient(sx,sy,r*.5,sx,sy,r*3);grad.addColorStop(0,col+Math.round(g*40).toString(16).padStart(2,'0'));grad.addColorStop(1,col+'00');ctx.beginPath();ctx.arc(sx,sy,r*3,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill()}
+ctx.beginPath();ctx.arc(sx,sy,r,0,Math.PI*2);ctx.fillStyle=`rgba(10,10,15,${isDim?.15:1})`;ctx.fill();ctx.strokeStyle=isDim?col+'33':col;ctx.lineWidth=isHover?2:1;ctx.stroke();
+ctx.beginPath();ctx.arc(sx,sy,r*.6,0,Math.PI*2);ctx.strokeStyle=isDim?col+'11':col+'44';ctx.lineWidth=.5;ctx.stroke();
+if(isHover){const pulseR=r+Math.sin(time*.08)*4+6;ctx.beginPath();ctx.arc(sx,sy,pulseR,0,Math.PI*2);ctx.strokeStyle=col+'44';ctx.lineWidth=1;ctx.stroke()}
+if(zoom>.4||isHover||r>16){const fs=Math.max(9,Math.min(12,r*.45));ctx.font=`500 ${fs}px 'JetBrains Mono',monospace`;ctx.textAlign='center';ctx.fillStyle=isDim?'rgba(200,200,212,0.15)':'rgba(200,200,212,0.9)';ctx.fillText(n.label,sx,sy+r+fs+4)}});
+requestAnimationFrame(draw)}
+function getNodeAt(sx,sy){const[wx,wy]=screenToWorld(sx,sy);for(let i=nodes.length-1;i>=0;i--){const n=nodes[i],dx=wx-n.x,dy=wy-n.y;if(dx*dx+dy*dy<(n.r+5)*(n.r+5))return n}return null}
+function showTooltip(n,x,y){let h=`<h3 style="color:${categories[n.cat].color}">${n.label}</h3><p>${n.desc}</p>`;h+=n.tags.map(t=>`<span class="tag">${t}</span>`).join('');if(n.url)h+=`<br><br><a href="${n.url}" target="_blank">OPEN →</a>`;tooltip.innerHTML=h;tooltip.classList.add('visible');tooltip.style.left=Math.min(x+16,W-340)+'px';tooltip.style.top=Math.min(y+16,H-200)+'px'}
+canvas.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;const n=getNodeAt(e.clientX,e.clientY);if(n!==hoverNode){hoverNode=n;canvas.style.cursor=n?'pointer':'default';if(n){n.targetR=n.r*1.2;showTooltip(n,e.clientX,e.clientY)}else{tooltip.classList.remove('visible');nodes.forEach(nd=>nd.targetR=nd.r)}}else if(n){showTooltip(n,e.clientX,e.clientY)}if(dragNode){const[wx,wy]=screenToWorld(e.clientX,e.clientY);dragNode.x=wx;dragNode.y=wy;dragNode.vx=0;dragNode.vy=0}});
+let dragMoved=false;
+canvas.addEventListener('mousedown',e=>{const n=getNodeAt(e.clientX,e.clientY);if(n){dragNode=n;n.glow=1;dragMoved=false}});
+canvas.addEventListener('mousemove',e=>{if(dragNode)dragMoved=true});
+canvas.addEventListener('mouseup',e=>{if(dragNode&&!dragMoved&&dragNode.url)window.open(dragNode.url,'_blank');dragNode=null;dragMoved=false});
+canvas.addEventListener('wheel',e=>{e.preventDefault();const f=e.deltaY>0?.92:1.08;zoom=Math.max(.2,Math.min(3,zoom*f));const[wx,wy]=screenToWorld(e.clientX,e.clientY);cx+=(wx-cx)*(1-1/f)*.3;cy+=(wy-cy)*(1-1/f)*.3},{passive:false});
+let isPanning=false,panStart={};
+canvas.addEventListener('mousedown',e=>{if(!getNodeAt(e.clientX,e.clientY)){isPanning=true;panStart={x:e.clientX,y:e.clientY,cx,cy}}});
+canvas.addEventListener('mousemove',e=>{if(isPanning){cx=panStart.cx-(e.clientX-panStart.x)/zoom;cy=panStart.cy-(e.clientY-panStart.y)/zoom}});
+canvas.addEventListener('mouseup',()=>{isPanning=false});
+canvas.addEventListener('touchstart',e=>{const t=e.touches[0];const n=getNodeAt(t.clientX,t.clientY);if(n){dragNode=n;showTooltip(n,t.clientX,t.clientY)}},{passive:true});
+canvas.addEventListener('touchmove',e=>{if(dragNode){const t=e.touches[0];const[wx,wy]=screenToWorld(t.clientX,t.clientY);dragNode.x=wx;dragNode.y=wy}},{passive:true});
+canvas.addEventListener('touchend',()=>{dragNode=null;tooltip.classList.remove('visible')});
+document.addEventListener('keydown',e=>{if(e.key==='r'||e.key==='R'){cx=W/2;cy=H/2;zoom=1}});
+Object.entries(categories).forEach(([k,v])=>{const el=document.createElement('div');el.className='legend-item';el.innerHTML=`<div class="legend-dot" style="background:${v.color}"></div>${v.label}`;legendEl.appendChild(el)});
+draw();
+</script>
 </body>
 </html>
